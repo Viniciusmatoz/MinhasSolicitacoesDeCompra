@@ -39,6 +39,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.vinicius.minhassolicitacoesdecompra.R
 import com.vinicius.minhassolicitacoesdecompra.ui.theme.BlueCircle
 import com.vinicius.minhassolicitacoesdecompra.ui.theme.DarkBackground
@@ -50,7 +51,7 @@ import com.vinicius.minhassolicitacoesdecompra.ui.theme.YellowDefault
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Home(){
+fun Home(navController: NavController){
     var search by remember {
         mutableStateOf("")
     }
@@ -188,10 +189,4 @@ fun Home(){
             )
         }
     }
-}
-@Composable
-@Preview
-fun Preview(
-) {
-    Home()
 }

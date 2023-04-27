@@ -3,30 +3,37 @@ package com.vinicius.minhassolicitacoesdecompra
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.vinicius.minhassolicitacoesdecompra.itemlista.SolicitacaoCompraItem
 import com.vinicius.minhassolicitacoesdecompra.ui.theme.MInhasSolicitacoesDeCompraTheme
+import com.vinicius.minhassolicitacoesdecompra.view.AdicionarSolicitacao
+import com.vinicius.minhassolicitacoesdecompra.view.EditarSolicitacao
 import com.vinicius.minhassolicitacoesdecompra.view.Home
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            SolicitacaoCompraItem()
+            MInhasSolicitacoesDeCompraTheme{
+                val navController = rememberNavController()
+
+                NavHost(
+                    navController = navController,
+                    startDestination = "home" ){
+                    composable("home"){
+                        AdicionarSolicitacao(navController)
+                    }
+                    composable("adicionarSolicitacao"){
+                        AdicionarSolicitacao(navController = navController)
+                    }
+                    composable("editarSolicitacao"){
+                        EditarSolicitacao(navController = navController)
+                    }
+                }
+            }
         }
     }
-}
-
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-
 }
 
