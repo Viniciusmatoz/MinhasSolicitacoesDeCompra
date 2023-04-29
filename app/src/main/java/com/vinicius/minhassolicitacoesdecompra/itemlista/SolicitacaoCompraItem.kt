@@ -43,8 +43,8 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import com.vinicius.minhassolicitacoesdecompra.R
 import com.vinicius.minhassolicitacoesdecompra.ui.theme.BlueCircle
 import com.vinicius.minhassolicitacoesdecompra.ui.theme.GreyBox
+import com.vinicius.minhassolicitacoesdecompra.ui.theme.GreyText
 import com.vinicius.minhassolicitacoesdecompra.ui.theme.YellowDefault
-import com.vinicius.minhassolicitacoesdecompra.ui.theme.YellowText
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -73,7 +73,7 @@ fun SolicitacaoCompraItem (){
                     })
                 Text(
                     text = "SC 005045",
-                    color = YellowText,
+                    color = GreyText,
                     fontSize = 22.sp,
                     fontWeight = FontWeight.ExtraBold,
                     modifier = Modifier

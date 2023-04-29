@@ -1,6 +1,7 @@
 package com.vinicius.minhassolicitacoesdecompra.view
 
 import android.annotation.SuppressLint
+import android.icu.text.CaseMap.Title
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Arrangement.SpaceAround
 import androidx.compose.foundation.layout.Column
@@ -8,7 +9,9 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
@@ -16,7 +19,12 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -48,8 +56,12 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.vinicius.minhassolicitacoesdecompra.R
+import com.vinicius.minhassolicitacoesdecompra.exposedDropDownMenu.armazemLista
+import com.vinicius.minhassolicitacoesdecompra.exposedDropDownMenu.categoriaLista
+import com.vinicius.minhassolicitacoesdecompra.exposedDropDownMenu.statusSolicitacaoDeCompra
 import com.vinicius.minhassolicitacoesdecompra.ui.theme.DarkBackground
 import com.vinicius.minhassolicitacoesdecompra.ui.theme.GreyBox
+import com.vinicius.minhassolicitacoesdecompra.ui.theme.GreyDefalt
 import com.vinicius.minhassolicitacoesdecompra.ui.theme.YellowDefault
 import kotlin.math.sin
 
@@ -58,11 +70,6 @@ import kotlin.math.sin
 @Composable
 fun AdicionarSolicitacao (navController: NavController){
 
-    val statusSolicitacao = listOf("SC em andamento", "PC em aprovação", "Aguardando entrega")
-
-    var estadoStatusSolicitacao by remember {
-        mutableStateOf(0)
-    }
 
     var numeroSolicitacao by remember {
         mutableStateOf("")
@@ -109,7 +116,6 @@ fun AdicionarSolicitacao (navController: NavController){
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState())
         ) {
             OutlinedTextField(
                 value = numeroSolicitacao ,
@@ -130,7 +136,7 @@ fun AdicionarSolicitacao (navController: NavController){
                 ),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 10.dp, top = 80.dp, end = 10.dp, bottom = 15.dp),
+                    .padding(start = 10.dp, top = 80.dp, end = 10.dp, bottom = 10.dp),
                 singleLine = true,
                 maxLines = 1,
                 shape = ShapeDefaults.Medium
@@ -161,27 +167,86 @@ fun AdicionarSolicitacao (navController: NavController){
                 maxLines = 1,
                 shape = ShapeDefaults.Medium
             )
-            Row() {
-                statusSolicitacao.forEachIndexed { i, opcao: String ->
-                    Row(
-                        verticalAlignment = CenterVertically,
-                        horizontalArrangement = SpaceAround,
-
-                        ) {
-                        RadioButton(
-                            selected = estadoStatusSolicitacao == i,
-                            onClick = { estadoStatusSolicitacao = i })
-                    }
+            Row (modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 10.dp, top = 0.dp, end = 10.dp, bottom = 10.dp)){
+                statusSolicitacaoDeCompra()
+            }
+            OutlinedTextField(
+                value = descricaoSolicitacao ,
+                onValueChange = {
+                    descricaoSolicitacao = it
+                },
+                label = {
+                    Text(text = "Descrição da requisição")
+                },
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Text
+                ),
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    cursorColor = YellowDefault,
+                    focusedBorderColor = YellowDefault,
+                    textColor = Color.White,
+                    disabledTextColor = Color.White
+                ),
+                modifier = Modifier
+                    .height(150.dp)
+                    .fillMaxWidth()
+                    .padding(start = 10.dp, top = 0.dp, end = 10.dp, bottom = 10.dp),
+                shape = ShapeDefaults.Medium
+            )
+            Row (modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 10.dp, top = 0.dp, end = 10.dp, bottom = 10.dp)){
+                armazemLista()
+            }
+            Row (modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 10.dp, top = 0.dp, end = 10.dp, bottom = 10.dp)){
+                categoriaLista()
+            }
+            OutlinedTextField(
+                value = observacoes ,
+                onValueChange = {
+                    observacoes = it
+                },
+                label = {
+                    Text(text = "Observações")
+                },
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Text
+                ),
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    cursorColor = YellowDefault,
+                    focusedBorderColor = YellowDefault,
+                    textColor = Color.White,
+                    disabledTextColor = Color.White
+                ),
+                modifier = Modifier
+                    .height(130.dp)
+                    .fillMaxWidth()
+                    .padding(start = 10.dp, top = 0.dp, end = 10.dp, bottom = 10.dp),
+                shape = ShapeDefaults.Medium
+            )
+            Row (modifier = Modifier.fillMaxWidth().padding(start = 20.dp, end = 20.dp),
+                verticalAlignment = Alignment.Bottom,
+                horizontalArrangement = Arrangement.SpaceAround
+            ){
+                Button(
+                    modifier = Modifier.height(60.dp).fillMaxWidth(0.5f),
+                    onClick = { /*TODO*/ },
+                    colors = ButtonDefaults.buttonColors(GreyDefalt),
+                ) {
+                    Text(text = "Cancelar",
+                        color = Color.White)
                 }
+                Button(
+                    modifier = Modifier.height(60.dp).fillMaxWidth(),
+                    onClick = { /*TODO*/ },
+                ) {
+                    Text(text = "Salvar")
+                }
+            }
             }
         }
     }
-}
-
-
-
-@Composable
-@Preview
-private fun AdicionarSolicitacao(){
-    AdicionarSolicitacao(navController = rememberNavController())
-}
