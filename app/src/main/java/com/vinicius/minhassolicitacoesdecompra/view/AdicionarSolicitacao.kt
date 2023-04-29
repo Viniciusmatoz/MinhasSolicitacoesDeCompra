@@ -2,11 +2,17 @@ package com.vinicius.minhassolicitacoesdecompra.view
 
 import android.annotation.SuppressLint
 import android.icu.text.CaseMap.Title
+import android.os.Build
+import android.util.Log
+import android.widget.Space
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Arrangement.SpaceAround
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -20,6 +26,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.BottomAppBarDefaults
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
@@ -55,8 +63,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
+import com.maxkeppeler.sheets.calendar.CalendarDialog
+import com.maxkeppeler.sheets.calendar.models.CalendarSelection
 import com.vinicius.minhassolicitacoesdecompra.R
 import com.vinicius.minhassolicitacoesdecompra.exposedDropDownMenu.armazemLista
+import com.vinicius.minhassolicitacoesdecompra.exposedDropDownMenu.calendarioPopUp
 import com.vinicius.minhassolicitacoesdecompra.exposedDropDownMenu.categoriaLista
 import com.vinicius.minhassolicitacoesdecompra.exposedDropDownMenu.statusSolicitacaoDeCompra
 import com.vinicius.minhassolicitacoesdecompra.ui.theme.DarkBackground
@@ -65,11 +77,11 @@ import com.vinicius.minhassolicitacoesdecompra.ui.theme.GreyDefalt
 import com.vinicius.minhassolicitacoesdecompra.ui.theme.YellowDefault
 import kotlin.math.sin
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun AdicionarSolicitacao (navController: NavController){
-
 
     var numeroSolicitacao by remember {
         mutableStateOf("")
@@ -93,6 +105,7 @@ fun AdicionarSolicitacao (navController: NavController){
     Scaffold(
         topBar = {
             TopAppBar(
+                modifier = Modifier.padding(bottom = 30.dp),
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(GreyBox),
                 title = {
                     Text(
@@ -111,12 +124,58 @@ fun AdicionarSolicitacao (navController: NavController){
                 }
             )
         },
+      bottomBar = {
+                  BottomAppBar(
+                      containerColor = DarkBackground,
+                  ) {
+                      Row (modifier = Modifier
+                          .fillMaxWidth()
+                          .padding(start = 20.dp, end = 20.dp, top = 13.dp, bottom = 13.dp),
+                          verticalAlignment = Alignment.Bottom,
+                          horizontalArrangement = Arrangement.SpaceAround
+                      ){
+                          Button(
+                              modifier = Modifier
+                                  .height(60.dp)
+                                  .width(165.dp),
+                              onClick = { /*TODO*/ },
+                              colors = ButtonDefaults.buttonColors(GreyDefalt),
+                          ) {
+                              Text(
+                                  text = "Cancelar",
+                                  color = Color.White,
+                                  fontSize = 20.sp )
+                          }
+                          Spacer(modifier = Modifier.padding(15.dp))
+                          Button(
+                              modifier = Modifier
+                                  .height(60.dp)
+                                  .width(165.dp),
+                              onClick = { /*TODO*/ },
+                          ) {
+                              Text(
+                                  text = "Adicionar",
+                                  fontSize = 20.sp,
+                                  fontWeight = FontWeight.Bold
+                              )
+                          }
+                      }
+                  }
+      },
         containerColor = DarkBackground
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .padding(bottom = 75.dp)
         ) {
+
+            Row (modifier = Modifier
+                .padding(top = 80.dp, start = 10.dp, end = 10.dp, bottom = 10.dp)
+                .fillMaxWidth(1f)){
+                calendarioPopUp("Previsão de entrega")
+            }
+
             OutlinedTextField(
                 value = numeroSolicitacao ,
                 onValueChange = {
@@ -136,7 +195,7 @@ fun AdicionarSolicitacao (navController: NavController){
                 ),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 10.dp, top = 80.dp, end = 10.dp, bottom = 10.dp),
+                    .padding(start = 10.dp, top = 0.dp, end = 10.dp, bottom = 10.dp),
                 singleLine = true,
                 maxLines = 1,
                 shape = ShapeDefaults.Medium
@@ -190,7 +249,7 @@ fun AdicionarSolicitacao (navController: NavController){
                     disabledTextColor = Color.White
                 ),
                 modifier = Modifier
-                    .height(150.dp)
+                    .height(135.dp)
                     .fillMaxWidth()
                     .padding(start = 10.dp, top = 0.dp, end = 10.dp, bottom = 10.dp),
                 shape = ShapeDefaults.Medium
@@ -223,30 +282,11 @@ fun AdicionarSolicitacao (navController: NavController){
                     disabledTextColor = Color.White
                 ),
                 modifier = Modifier
-                    .height(130.dp)
+                    .fillMaxHeight()
                     .fillMaxWidth()
                     .padding(start = 10.dp, top = 0.dp, end = 10.dp, bottom = 10.dp),
                 shape = ShapeDefaults.Medium
             )
-            Row (modifier = Modifier.fillMaxWidth().padding(start = 20.dp, end = 20.dp),
-                verticalAlignment = Alignment.Bottom,
-                horizontalArrangement = Arrangement.SpaceAround
-            ){
-                Button(
-                    modifier = Modifier.height(60.dp).fillMaxWidth(0.5f),
-                    onClick = { /*TODO*/ },
-                    colors = ButtonDefaults.buttonColors(GreyDefalt),
-                ) {
-                    Text(text = "Cancelar",
-                        color = Color.White)
-                }
-                Button(
-                    modifier = Modifier.height(60.dp).fillMaxWidth(),
-                    onClick = { /*TODO*/ },
-                ) {
-                    Text(text = "Salvar")
-                }
-            }
-            }
         }
     }
+}

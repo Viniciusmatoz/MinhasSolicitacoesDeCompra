@@ -77,4 +77,19 @@ dependencies {
     implementation "androidx.navigation:navigation-compose:$nav_version"
 
     implementation "androidx.constraintlayout:constraintlayout-compose:1.0.1"
+
+    dependencies {
+        constraints {
+            implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.0") {
+                because("kotlin-stdlib-jdk7 is now a part of kotlin-stdlib")
+            }
+            implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.0") {
+                because("kotlin-stdlib-jdk8 is now a part of kotlin-stdlib")
+            }
+        }
+    }
+
+    implementation 'com.maxkeppeler.sheets-compose-dialogs:core:1.1.1'
+    implementation 'com.maxkeppeler.sheets-compose-dialogs:calendar:1.1.1'
+    implementation 'com.maxkeppeler.sheets-compose-dialogs:list:1.1.1'
 }
