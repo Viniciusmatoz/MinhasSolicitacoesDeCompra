@@ -41,6 +41,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -55,9 +56,13 @@ import com.vinicius.minhassolicitacoesdecompra.model.SolicitacaoDeCompra
 import com.vinicius.minhassolicitacoesdecompra.ui.theme.DarkBackground
 import com.vinicius.minhassolicitacoesdecompra.ui.theme.GreyBox
 import com.vinicius.minhassolicitacoesdecompra.ui.theme.GreyDefalt
+import com.vinicius.minhassolicitacoesdecompra.ui.theme.GreyDisableButton
+import com.vinicius.minhassolicitacoesdecompra.ui.theme.GreyText
+import com.vinicius.minhassolicitacoesdecompra.ui.theme.RedCircle
 import com.vinicius.minhassolicitacoesdecompra.ui.theme.YellowDefault
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.time.LocalDate
 
 
@@ -80,6 +85,7 @@ fun AdicionarSolicitacao (navController: NavController){
     var armazemSolicitacao by remember { mutableStateOf("") }
     var categoriaSolicitacao by remember { mutableStateOf("") }
     var observacoes by remember { mutableStateOf("") }
+    var solicitacaoExistente by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -96,7 +102,7 @@ fun AdicionarSolicitacao (navController: NavController){
                 },
                 navigationIcon = {
                     IconButton(
-                        onClick = { /*TODO*/ },
+                        onClick = { navController.popBackStack()},
                         ) {
                         Icon(Icons.Rounded.ArrowBack, contentDescription = "Icone voltar", tint = Color.White)
                     }
@@ -117,7 +123,7 @@ fun AdicionarSolicitacao (navController: NavController){
                               modifier = Modifier
                                   .height(60.dp)
                                   .width(165.dp),
-                              onClick = { /*TODO*/ },
+                              onClick = {navController.popBackStack()},
                               elevation = ButtonDefaults.buttonElevation(10.dp),
                               colors = ButtonDefaults.buttonColors(GreyDefalt),
                           ) {
@@ -128,6 +134,13 @@ fun AdicionarSolicitacao (navController: NavController){
                           }
                           Spacer(modifier = Modifier.padding(15.dp))
                           Button(
+                              enabled = !solicitacaoExistente,
+                              colors = ButtonDefaults.buttonColors(
+                                  containerColor = YellowDefault,
+                                  contentColor = DarkBackground,
+                                  disabledContainerColor = GreyDisableButton,
+                                  disabledContentColor = Color.White
+                              ),
                               modifier = Modifier
                                   .height(60.dp)
                                   .width(165.dp),
@@ -139,31 +152,31 @@ fun AdicionarSolicitacao (navController: NavController){
                                           || descricaoSolicitacao.isEmpty()
                                           || categoriaSolicitacao.isEmpty()
                                           || statusSolicitacao.isEmpty()
-                                          || armazemSolicitacao.isEmpty()){
+                                          || armazemSolicitacao.isEmpty()
+                                      ){
                                           message = false
-                                      }else{
-
-                                          message = true
-                                          val solicitacao = SolicitacaoDeCompra(
-                                              numeroSolicitacao,
-                                              numeroPedidoCompra,
-                                              descricaoSolicitacao,
-                                              statusSolicitacao,
-                                              categoriaSolicitacao,
-                                              armazemSolicitacao,
-                                              observacoes,
-                                              dataPrevisaoEntrega
-                                          )
-                                          listaSolicitacoes.add(solicitacao)
+                                      } else {
+                                              message = true
+                                              val solicitacao = SolicitacaoDeCompra(
+                                                  numeroSolicitacao,
+                                                  numeroPedidoCompra,
+                                                  descricaoSolicitacao,
+                                                  statusSolicitacao,
+                                                  categoriaSolicitacao,
+                                                  armazemSolicitacao,
+                                                  observacoes,
+                                                  dataPrevisaoEntrega
+                                              )
                                           solicitacaoDao = AppDataBase.getInstance(context).solicitacaoDao()
-                                          solicitacaoDao.gravar(listaSolicitacoes)
+                                              listaSolicitacoes.add(solicitacao)
+                                              solicitacaoDao.gravar(listaSolicitacoes)
+                                          }
                                       }
-                                  }
                                   scope.launch(Dispatchers.Main){
                                       if (message){
                                           Toast.makeText(context, "Solicitação adicionada", Toast.LENGTH_SHORT).show()
                                           navController.popBackStack()
-                                      }else{
+                                      }else {
                                           Toast.makeText(context, "Preencha todos os campos", Toast.LENGTH_SHORT).show()
                                       }
                                   }
@@ -199,21 +212,36 @@ fun AdicionarSolicitacao (navController: NavController){
                 )
             }
 
+
             OutlinedTextField(
-                value = numeroSolicitacao ,
-                onValueChange = {
-                    numeroSolicitacao = it
+                value = numeroSolicitacao,
+                onValueChange = { newNumber ->
+                    numeroSolicitacao = newNumber
+                    if (newNumber.isNotEmpty()) {
+                        scope.launch(Dispatchers.IO) {
+                            solicitacaoDao = AppDataBase.getInstance(context).solicitacaoDao()
+                            val existingSolicitacao = solicitacaoDao.getById(newNumber)
+                            if (existingSolicitacao != null) {
+                                withContext(Dispatchers.Main) {
+                                    Toast.makeText(context, "Já existe uma solicitação com este número", Toast.LENGTH_SHORT).show()
+                                    solicitacaoExistente = true
+                                }
+                            }else{
+                                solicitacaoExistente = false
+                            }
+                        }
+                    }
                 },
-                label = {
-                    Text(text = "Número da Solicitação")
-                },
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Number
-                ),
+                label = { Text(text = "Número da Solicitação") },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 colors = TextFieldDefaults.outlinedTextFieldColors(
                     cursorColor = YellowDefault,
                     focusedBorderColor = YellowDefault,
-                    textColor = Color.White,
+                    textColor = if (solicitacaoExistente) {
+                        RedCircle
+                    } else {
+                        Color.White
+                    },
                     disabledTextColor = Color.White
                 ),
                 modifier = Modifier
@@ -221,9 +249,8 @@ fun AdicionarSolicitacao (navController: NavController){
                     .padding(start = 10.dp, top = 0.dp, end = 10.dp, bottom = 10.dp),
                 singleLine = true,
                 maxLines = 1,
-                shape = ShapeDefaults.Medium
-
-                )
+                shape = ShapeDefaults.Medium,
+            )
 
             OutlinedTextField(
                 value = numeroPedidoCompra ,
@@ -263,19 +290,23 @@ fun AdicionarSolicitacao (navController: NavController){
                     Text(text = "Descrição da requisição")
                 },
                 keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Text
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Done
                 ),
                 colors = TextFieldDefaults.outlinedTextFieldColors(
                     cursorColor = YellowDefault,
                     focusedBorderColor = YellowDefault,
                     textColor = Color.White,
-                    disabledTextColor = Color.White
+                    disabledTextColor = Color.White,
+                    unfocusedBorderColor = GreyText,
+                    disabledBorderColor = GreyText
                 ),
                 modifier = Modifier
                     .height(135.dp)
                     .fillMaxWidth()
                     .padding(start = 10.dp, top = 0.dp, end = 10.dp, bottom = 10.dp),
-                shape = ShapeDefaults.Medium
+                shape = ShapeDefaults.Medium,
+
             )
             Row (modifier = Modifier
                 .fillMaxWidth()
@@ -293,10 +324,11 @@ fun AdicionarSolicitacao (navController: NavController){
                     observacoes = it
                 },
                 label = {
-                    Text(text = "Observações")
+                    Text(text = "Observações (opcional)")
                 },
                 keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Text
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Done
                 ),
                 colors = TextFieldDefaults.outlinedTextFieldColors(
                     cursorColor = YellowDefault,
