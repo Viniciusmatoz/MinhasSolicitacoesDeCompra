@@ -21,7 +21,7 @@ import com.maxkeppeler.sheets.list.models.ListSelection
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun armazemLista(){
+fun armazemLista(onStorageSelectedChanged: (String) -> Unit){
     val popUpEstado = rememberUseCaseState()
     var armazemSelecionado by remember { mutableStateOf("") }
 
@@ -37,6 +37,7 @@ fun armazemLista(){
         showRadioButtons = true,
         onSelectOption = { index, option ->
             armazemSelecionado = option.titleText
+            onStorageSelectedChanged (armazemSelecionado)
         }
     )
     Column() {

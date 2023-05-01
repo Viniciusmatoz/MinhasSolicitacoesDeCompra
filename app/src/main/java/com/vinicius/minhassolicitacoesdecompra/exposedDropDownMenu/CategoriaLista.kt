@@ -24,7 +24,7 @@ import com.vinicius.minhassolicitacoesdecompra.ui.theme.GreyText
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun categoriaLista(){
+fun categoriaLista(onCategorySelectedChanged: (String) -> Unit){
 
     val popUpEstado = rememberUseCaseState()
     var categoriaSelecionada by remember { mutableStateOf("") }
@@ -42,6 +42,7 @@ fun categoriaLista(){
         showRadioButtons = true,
         onSelectOption = { index, option ->
             categoriaSelecionada = option.titleText
+            onCategorySelectedChanged(categoriaSelecionada)
         }
     )
     Column() {

@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import com.vinicius.minhassolicitacoesdecompra.model.SolicitacaoDeCompra
+import java.time.LocalDate
 
 @Dao
 interface SolicitacaoDao {
@@ -26,7 +27,7 @@ interface SolicitacaoDao {
         novaCategoria: String,
         novoArmazemDestino: String,
         novaObservacoes: String,
-        novaDataPrevisaoEntrega: String
+        novaDataPrevisaoEntrega: LocalDate
     )
 
     @Query("DELETE FROM tabela_solicitacoes_compra WHERE numero_solicitacao = :id")

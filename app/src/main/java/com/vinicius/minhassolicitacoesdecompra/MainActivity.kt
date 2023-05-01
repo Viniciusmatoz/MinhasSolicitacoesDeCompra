@@ -8,8 +8,6 @@ import androidx.annotation.RequiresApi
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.vinicius.minhassolicitacoesdecompra.exposedDropDownMenu.calendarioPopUp
-import com.vinicius.minhassolicitacoesdecompra.itemlista.SolicitacaoCompraItem
 import com.vinicius.minhassolicitacoesdecompra.ui.theme.MInhasSolicitacoesDeCompraTheme
 import com.vinicius.minhassolicitacoesdecompra.view.AdicionarSolicitacao
 import com.vinicius.minhassolicitacoesdecompra.view.EditarSolicitacao
@@ -27,7 +25,7 @@ class MainActivity : ComponentActivity() {
                     navController = navController,
                     startDestination = "home" ){
                     composable("home"){
-                        AdicionarSolicitacao(navController)
+                        Home(navController)
                     }
                     composable("adicionarSolicitacao"){
                         AdicionarSolicitacao(navController = navController)

@@ -20,8 +20,7 @@ import com.maxkeppeler.sheets.list.models.ListSelection
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-
-fun statusSolicitacaoDeCompra(){
+fun statusSolicitacaoDeCompra(onStatusSelectedChanged: (String) -> Unit){
     val popUpEstado = rememberUseCaseState()
     var statusSelecionado by remember { mutableStateOf("") }
 
@@ -36,6 +35,7 @@ fun statusSolicitacaoDeCompra(){
         showRadioButtons = true,
         onSelectOption = { index, option ->
             statusSelecionado = option.titleText
+            onStatusSelectedChanged(statusSelecionado)
         }
     )
     Column() {
@@ -47,10 +47,11 @@ fun statusSolicitacaoDeCompra(){
                 fontWeight = FontWeight.Bold,
                 fontSize = 16.sp,
                 modifier = Modifier.fillMaxWidth()
-                )
+            )
         }
         ListDialog(
-            selection = selection,
-            state = popUpEstado )
+            state = popUpEstado,
+            selection = selection
+        )
     }
 }

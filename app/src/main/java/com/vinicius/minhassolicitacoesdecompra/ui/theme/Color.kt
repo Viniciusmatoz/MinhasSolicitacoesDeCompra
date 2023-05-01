@@ -11,6 +11,7 @@ val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
 
 val YellowDefault = Color(0xFFFED32C)
+val YellowBasic = Color(0xFFD6A55C)
 val GreyTextBox = Color(0xFF7D7F82)
 val GreyBox = Color(0xFF202329)
 val DarkBackground = Color(0xFF0D1318)

@@ -1,106 +1,85 @@
 package com.vinicius.minhassolicitacoesdecompra.view
 
 import android.annotation.SuppressLint
-import android.icu.text.CaseMap.Title
 import android.os.Build
-import android.util.Log
-import android.widget.Space
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Arrangement.SpaceAround
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.BottomAppBarDefaults
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.ShapeDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
-import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
-import com.maxkeppeler.sheets.calendar.CalendarDialog
-import com.maxkeppeler.sheets.calendar.models.CalendarSelection
-import com.vinicius.minhassolicitacoesdecompra.R
+import com.vinicius.minhassolicitacoesdecompra.AppDataBase
+import com.vinicius.minhassolicitacoesdecompra.dao.SolicitacaoDao
 import com.vinicius.minhassolicitacoesdecompra.exposedDropDownMenu.armazemLista
 import com.vinicius.minhassolicitacoesdecompra.exposedDropDownMenu.calendarioPopUp
 import com.vinicius.minhassolicitacoesdecompra.exposedDropDownMenu.categoriaLista
 import com.vinicius.minhassolicitacoesdecompra.exposedDropDownMenu.statusSolicitacaoDeCompra
+import com.vinicius.minhassolicitacoesdecompra.model.SolicitacaoDeCompra
 import com.vinicius.minhassolicitacoesdecompra.ui.theme.DarkBackground
 import com.vinicius.minhassolicitacoesdecompra.ui.theme.GreyBox
 import com.vinicius.minhassolicitacoesdecompra.ui.theme.GreyDefalt
 import com.vinicius.minhassolicitacoesdecompra.ui.theme.YellowDefault
-import kotlin.math.sin
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import java.time.LocalDate
 
+
+private lateinit var solicitacaoDao: SolicitacaoDao
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun AdicionarSolicitacao (navController: NavController){
 
-    var numeroSolicitacao by remember {
-        mutableStateOf("")
-    }
-    var descricaoSolicitacao by remember {
-        mutableStateOf("")
-    }
-    var numeroPedidoCompra by remember {
-        mutableStateOf("")
-    }
-    var categoria by remember {
-        mutableStateOf("")
-    }
-    var armazem by remember {
-        mutableStateOf("")
-    }
-    var observacoes by remember {
-        mutableStateOf("")
-    }
+    val listaSolicitacoes: MutableList<SolicitacaoDeCompra> = mutableListOf()
+    val scope = rememberCoroutineScope()
+    val context = LocalContext.current
+
+    var dataPrevisaoEntrega by remember { mutableStateOf<LocalDate>(LocalDate.now().plusMonths(1)) }
+    var numeroSolicitacao by remember { mutableStateOf("")}
+    var numeroPedidoCompra by remember { mutableStateOf("") }
+    var statusSolicitacao by remember { mutableStateOf("") }
+    var descricaoSolicitacao by remember { mutableStateOf("") }
+    var armazemSolicitacao by remember { mutableStateOf("") }
+    var categoriaSolicitacao by remember { mutableStateOf("") }
+    var observacoes by remember { mutableStateOf("") }
 
     Scaffold(
         topBar = {
@@ -139,6 +118,7 @@ fun AdicionarSolicitacao (navController: NavController){
                                   .height(60.dp)
                                   .width(165.dp),
                               onClick = { /*TODO*/ },
+                              elevation = ButtonDefaults.buttonElevation(10.dp),
                               colors = ButtonDefaults.buttonColors(GreyDefalt),
                           ) {
                               Text(
@@ -151,7 +131,45 @@ fun AdicionarSolicitacao (navController: NavController){
                               modifier = Modifier
                                   .height(60.dp)
                                   .width(165.dp),
-                              onClick = { /*TODO*/ },
+                              onClick = {
+                                  var message = false
+
+                                  scope.launch(Dispatchers.IO){
+                                      if (numeroSolicitacao.isEmpty()
+                                          || descricaoSolicitacao.isEmpty()
+                                          || categoriaSolicitacao.isEmpty()
+                                          || statusSolicitacao.isEmpty()
+                                          || armazemSolicitacao.isEmpty()){
+                                          message = false
+                                      }else{
+
+                                          message = true
+                                          val solicitacao = SolicitacaoDeCompra(
+                                              numeroSolicitacao,
+                                              numeroPedidoCompra,
+                                              descricaoSolicitacao,
+                                              statusSolicitacao,
+                                              categoriaSolicitacao,
+                                              armazemSolicitacao,
+                                              observacoes,
+                                              dataPrevisaoEntrega
+                                          )
+                                          listaSolicitacoes.add(solicitacao)
+                                          solicitacaoDao = AppDataBase.getInstance(context).solicitacaoDao()
+                                          solicitacaoDao.gravar(listaSolicitacoes)
+                                      }
+                                  }
+                                  scope.launch(Dispatchers.Main){
+                                      if (message){
+                                          Toast.makeText(context, "Solicitação adicionada", Toast.LENGTH_SHORT).show()
+                                          navController.popBackStack()
+                                      }else{
+                                          Toast.makeText(context, "Preencha todos os campos", Toast.LENGTH_SHORT).show()
+                                      }
+                                  }
+
+                              },
+                              elevation = ButtonDefaults.buttonElevation(10.dp),
                           ) {
                               Text(
                                   text = "Adicionar",
@@ -173,7 +191,12 @@ fun AdicionarSolicitacao (navController: NavController){
             Row (modifier = Modifier
                 .padding(top = 80.dp, start = 10.dp, end = 10.dp, bottom = 10.dp)
                 .fillMaxWidth(1f)){
-                calendarioPopUp("Previsão de entrega")
+                calendarioPopUp(
+                    txtButton = "Previsão de entrega",
+                    onDateSelected ={
+                        date -> dataPrevisaoEntrega = date
+                    }
+                )
             }
 
             OutlinedTextField(
@@ -229,7 +252,7 @@ fun AdicionarSolicitacao (navController: NavController){
             Row (modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 10.dp, top = 0.dp, end = 10.dp, bottom = 10.dp)){
-                statusSolicitacaoDeCompra()
+                statusSolicitacaoDeCompra(onStatusSelectedChanged = { newStatus -> statusSolicitacao = newStatus})
             }
             OutlinedTextField(
                 value = descricaoSolicitacao ,
@@ -257,12 +280,12 @@ fun AdicionarSolicitacao (navController: NavController){
             Row (modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 10.dp, top = 0.dp, end = 10.dp, bottom = 10.dp)){
-                armazemLista()
+                armazemLista(onStorageSelectedChanged = {newStorage -> armazemSolicitacao = newStorage})
             }
             Row (modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 10.dp, top = 0.dp, end = 10.dp, bottom = 10.dp)){
-                categoriaLista()
+                categoriaLista(onCategorySelectedChanged = {newCategory -> categoriaSolicitacao = newCategory})
             }
             OutlinedTextField(
                 value = observacoes ,
