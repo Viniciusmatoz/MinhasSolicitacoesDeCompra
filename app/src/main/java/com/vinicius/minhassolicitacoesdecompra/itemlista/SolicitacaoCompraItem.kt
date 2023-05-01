@@ -1,6 +1,9 @@
 package com.vinicius.minhassolicitacoesdecompra.itemlista
 
+import android.content.Context
 import android.graphics.fonts.FontStyle
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
@@ -25,6 +28,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.ShapeDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -40,17 +45,37 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.navigation.NavController
 import com.vinicius.minhassolicitacoesdecompra.R
+import com.vinicius.minhassolicitacoesdecompra.model.SolicitacaoDeCompra
 import com.vinicius.minhassolicitacoesdecompra.ui.theme.BlueCircle
+import com.vinicius.minhassolicitacoesdecompra.ui.theme.GreenCircle
 import com.vinicius.minhassolicitacoesdecompra.ui.theme.GreyBox
 import com.vinicius.minhassolicitacoesdecompra.ui.theme.GreyText
+import com.vinicius.minhassolicitacoesdecompra.ui.theme.Purple80
+import com.vinicius.minhassolicitacoesdecompra.ui.theme.RedCircle
 import com.vinicius.minhassolicitacoesdecompra.ui.theme.YellowDefault
+import java.time.format.DateTimeFormatter
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SolicitacaoCompraItem (){
+fun SolicitacaoCompraItem(
+    navController: NavController,
+    position: Int,
+    listaSolicitacoes: MutableList<SolicitacaoDeCompra>,
+    context: Context
+){
+
+    val numeroSolicitacao = listaSolicitacoes[position].numeroSolicitacao
+    val numeroPedido = listaSolicitacoes[position].numeroPedido
+    val statusSolicitacao = listaSolicitacoes[position].statusSolicitacao
+    val descricaoSolicitacao = listaSolicitacoes[position].descricao
+    val dataCriacao = listaSolicitacoes[position].dataCriacao
+
+
     Card(
-        onClick = { /*TODO*/ },
+        onClick = {},
         colors = CardDefaults.cardColors(GreyBox),
         shape = ShapeDefaults.Small,
         elevation = CardDefaults.cardElevation(15.dp),
@@ -64,15 +89,25 @@ fun SolicitacaoCompraItem (){
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceAround
                 ) {
+
                 Canvas(
                     modifier = Modifier
                         .size(28.dp)
                         .padding(top = 5.dp, start = 8.dp),
                     onDraw = {
-                        drawCircle(BlueCircle)
-                    })
+                        val circleColor = when (statusSolicitacao) {
+                            "SC em andamento" -> RedCircle
+                            "PC em aprovação" -> BlueCircle
+                            "Aguardando entrega" -> GreenCircle
+                            else -> Purple80
+                        }
+                        drawCircle(circleColor)
+                    }
+                )
+
+
                 Text(
-                    text = "SC 005045",
+                    text = "SC $numeroSolicitacao",
                     color = GreyText,
                     fontSize = 22.sp,
                     fontWeight = FontWeight.ExtraBold,
@@ -80,7 +115,7 @@ fun SolicitacaoCompraItem (){
                         .padding(top = 5.dp, start = 10.dp)
                     )
                 Text(
-                    text = "PC 109179",
+                    text = "PC $numeroPedido",
                     color = Color.White,
                     fontSize = 22.sp,
                     fontWeight = FontWeight.ExtraBold,
@@ -88,7 +123,7 @@ fun SolicitacaoCompraItem (){
                         .padding(top = 5.dp, start = 15.dp)
                 )
                 Text(
-                    text = "01/01/2023",
+                    text = dataCriacao.minusMonths(1).format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
                     color = Color.White,
                     fontSize = 12.sp,
                     fontWeight = FontWeight.SemiBold,
@@ -100,7 +135,7 @@ fun SolicitacaoCompraItem (){
                 .fillMaxWidth(1f),
             verticalAlignment = Alignment.Top) {
                 Text(
-                    text = "Compra almoxarifado insumos 2032 UTE Distrito",
+                    text = descricaoSolicitacao,
                     color = Color.White,
                     textAlign = TextAlign.Start,
                     fontSize = 14.sp,
@@ -115,7 +150,7 @@ fun SolicitacaoCompraItem (){
                 ){
                     Image(
                         imageVector = ImageVector.vectorResource(id = R.drawable.ic_star),
-                        contentDescription = "icon delete")
+                        contentDescription = "icon star")
                 }
                 IconButton(onClick = { /*TODO*/ },
                 ){
@@ -127,9 +162,4 @@ fun SolicitacaoCompraItem (){
             }
         }
     }
-}
-@Preview
-@Composable
-fun SolicitacaoPreview(){
-    SolicitacaoCompraItem()
 }

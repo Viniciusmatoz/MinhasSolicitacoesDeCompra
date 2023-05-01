@@ -69,7 +69,7 @@ import java.time.LocalDate
 private lateinit var solicitacaoDao: SolicitacaoDao
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "SuspiciousIndentation")
 @Composable
 fun AdicionarSolicitacao (navController: NavController){
 
@@ -77,6 +77,7 @@ fun AdicionarSolicitacao (navController: NavController){
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
 
+    var dataCriacao by remember { mutableStateOf<LocalDate>(LocalDate.now())}
     var dataPrevisaoEntrega by remember { mutableStateOf<LocalDate>(LocalDate.now().plusMonths(1)) }
     var numeroSolicitacao by remember { mutableStateOf("")}
     var numeroPedidoCompra by remember { mutableStateOf("") }
@@ -165,7 +166,8 @@ fun AdicionarSolicitacao (navController: NavController){
                                                   categoriaSolicitacao,
                                                   armazemSolicitacao,
                                                   observacoes,
-                                                  dataPrevisaoEntrega
+                                                  dataPrevisaoEntrega,
+                                                  dataCriacao
                                               )
                                           solicitacaoDao = AppDataBase.getInstance(context).solicitacaoDao()
                                               listaSolicitacoes.add(solicitacao)
@@ -202,12 +204,11 @@ fun AdicionarSolicitacao (navController: NavController){
         ) {
 
             Row (modifier = Modifier
-                .padding(top = 80.dp, start = 10.dp, end = 10.dp, bottom = 10.dp)
-                .fillMaxWidth(1f)){
+                .padding(top = 80.dp, start = 10.dp, end = 10.dp, bottom = 10.dp)){
                 calendarioPopUp(
-                    txtButton = "Previsão de entrega",
+                    txtButton = "Data previsão entrega",
                     onDateSelected ={
-                        date -> dataPrevisaoEntrega = date
+                        date -> dataCriacao = date
                     }
                 )
             }

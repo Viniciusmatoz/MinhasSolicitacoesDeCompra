@@ -15,6 +15,7 @@ data class SolicitacaoDeCompra (
     @ColumnInfo(name = "categoria_solicitacao") val categoriaSolicitacao: String,
     @ColumnInfo(name = "armazem_destino") val armazemDestino: String,
     @ColumnInfo(name = "observacoes") val observacoesSolicitacao: String,
+    @ColumnInfo(name = "data_criacao") val dataCriacao: LocalDate,
     @ColumnInfo(name = "data_previsao_entrega") val dataPrevisaoEntrega: LocalDate,
         )
 
