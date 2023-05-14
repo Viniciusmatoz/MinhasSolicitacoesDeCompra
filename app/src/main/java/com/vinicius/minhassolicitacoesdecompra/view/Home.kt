@@ -211,7 +211,7 @@ fun Home(navController: NavController){
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(55.dp)
-                    .padding(start = 15.dp, end = 15.dp),
+                    .padding(start = 15.dp, end = 15.dp, bottom = 10.dp),
                 singleLine = true,
                 label = {
                     Text(text = "Pesquisar")},

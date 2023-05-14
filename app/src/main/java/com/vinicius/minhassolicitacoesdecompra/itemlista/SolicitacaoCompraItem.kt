@@ -80,7 +80,7 @@ fun SolicitacaoCompraItem(
         shape = ShapeDefaults.Small,
         elevation = CardDefaults.cardElevation(15.dp),
         modifier = Modifier
-            .padding(top = 15.dp, start = 10.dp, end = 10.dp, bottom = 15.dp)
+            .padding(top = 12.dp, start = 10.dp, end = 10.dp, bottom = 0.dp)
             .fillMaxWidth()
     ){
         Column{
@@ -107,7 +107,7 @@ fun SolicitacaoCompraItem(
 
 
                 Text(
-                    text = "SC $numeroSolicitacao",
+                    text = "SC $numeroSolicitacao".take(9),
                     color = GreyText,
                     fontSize = 22.sp,
                     fontWeight = FontWeight.ExtraBold,
@@ -115,7 +115,7 @@ fun SolicitacaoCompraItem(
                         .padding(top = 5.dp, start = 10.dp)
                     )
                 Text(
-                    text = "PC $numeroPedido",
+                    text = "PC $numeroPedido".take(9),
                     color = Color.White,
                     fontSize = 22.sp,
                     fontWeight = FontWeight.ExtraBold,
@@ -128,7 +128,7 @@ fun SolicitacaoCompraItem(
                     fontSize = 12.sp,
                     fontWeight = FontWeight.SemiBold,
                     modifier = Modifier
-                        .padding(top = 5.dp, start = 40.dp)
+                        .padding(top = 2.dp, start = 40.dp, end = 5.dp)
                 )
             }
             Row(modifier = Modifier
