@@ -151,8 +151,8 @@ fun AdicionarSolicitacao (navController: NavController){
                                                   categoriaSolicitacao,
                                                   armazemSolicitacao,
                                                   observacoes,
-                                                  dataPrevisaoEntrega,
-                                                  dataCriacao
+                                                  dataCriacao,
+                                                  dataPrevisaoEntrega
                                               )
                                               solicitacaoDao =
                                                   AppDataBase.getInstance(context).solicitacaoDao()
@@ -200,7 +200,8 @@ fun AdicionarSolicitacao (navController: NavController){
                         txtButton = "Data criação",
                         onDateSelected = { date ->
                             dataCriacao = date
-                        }
+                        },
+                        initialDate = LocalDate.now()
                     )
                 }
                 Box(modifier = Modifier
@@ -210,7 +211,8 @@ fun AdicionarSolicitacao (navController: NavController){
                         txtButton = "Data previsão entrega",
                         onDateSelected = { date ->
                             dataPrevisaoEntrega = date
-                        }
+                        },
+                        initialDate = LocalDate.now()
                     )
                 }
 

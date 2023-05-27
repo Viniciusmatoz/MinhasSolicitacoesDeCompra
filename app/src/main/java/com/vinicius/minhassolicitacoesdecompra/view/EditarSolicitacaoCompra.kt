@@ -1,15 +1,24 @@
 package com.vinicius.minhassolicitacoesdecompra.view
 
 import android.annotation.SuppressLint
+import android.os.Build
+import android.widget.Toast
+import androidx.annotation.RequiresApi
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -25,6 +34,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -36,15 +46,21 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.maxkeppeler.sheets.list.models.ListOption
 import com.vinicius.minhassolicitacoesdecompra.AppDataBase
+import com.vinicius.minhassolicitacoesdecompra.components.ButtonCustom
 import com.vinicius.minhassolicitacoesdecompra.components.OutlinedButtonCustom
 import com.vinicius.minhassolicitacoesdecompra.components.OutlinedButtonPopUpCustom
 import com.vinicius.minhassolicitacoesdecompra.components.OutlinedTextFieldCustom
+import com.vinicius.minhassolicitacoesdecompra.exposedDropDownMenu.CalendarioPopUp
 import com.vinicius.minhassolicitacoesdecompra.model.SolicitacaoDeCompra
 import com.vinicius.minhassolicitacoesdecompra.ui.theme.DarkBackground
 import com.vinicius.minhassolicitacoesdecompra.ui.theme.GreyCardBox
+import com.vinicius.minhassolicitacoesdecompra.ui.theme.GreyDefalt
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.time.LocalDate
 
+@RequiresApi(Build.VERSION_CODES.O)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -60,8 +76,8 @@ fun EditarSolicitacaoCompra(navController: NavController, numeroSolicitacao: Str
 
     // Variáveis para armazenar os valores editáveis
     var novoPedidoCompra by remember { mutableStateOf("") }
-    var novaDataCriacao by remember { mutableStateOf("") }
-    var novaDataPrevisaoEntrega by remember { mutableStateOf("") }
+    var novaDataCriacao by remember { mutableStateOf<LocalDate>(LocalDate.now())}
+    var novaDataPrevisaoEntrega by remember { mutableStateOf<LocalDate>(LocalDate.now())}
     var novaDescricao by remember { mutableStateOf("") }
     var novoArmazem by remember { mutableStateOf("") }
     var novaCategoria by remember { mutableStateOf("") }
@@ -84,6 +100,8 @@ fun EditarSolicitacaoCompra(navController: NavController, numeroSolicitacao: Str
             novaObservacao = solicitacao?.observacoesSolicitacao ?: ""
             novaDescricao = solicitacao?.descricao ?: ""
             novaCategoria = solicitacao?.categoriaSolicitacao ?: ""
+            novaDataCriacao = solicitacao?.dataCriacao ?: novaDataCriacao
+            novaDataPrevisaoEntrega = solicitacao?.dataPrevisaoEntrega ?: novaDataPrevisaoEntrega
 
         } catch (e: Exception) {
             errorState.value = "Erro ao recuperar a solicitação: ${e.message}"
@@ -112,8 +130,84 @@ fun EditarSolicitacaoCompra(navController: NavController, numeroSolicitacao: Str
                 }
             )
         },
+        bottomBar = {
+            BottomAppBar(
+                containerColor = DarkBackground,
+            ) {
+                Row (modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 13.dp, bottom = 13.dp),
+                    verticalAlignment = Alignment.Bottom,
+                    horizontalArrangement = Arrangement.SpaceAround
+                ){
+                    Box(modifier = Modifier
+                        .weight(1f)
+                        .padding(horizontal = 4.dp)) {
+                        ButtonCustom(
+                            modifier = Modifier.fillMaxWidth(),
+                            onClick = { navController.popBackStack() },
+                            textButton = "Cancelar",
+                            colorContainerButton = GreyDefalt,
+                            colorTextButton = Color.White
+                        )
+                    }
+                    Box(modifier = Modifier
+                        .weight(1f)
+                        .padding(horizontal = 4.dp)) {
+                        ButtonCustom(
+                            modifier = Modifier.fillMaxWidth(),
+                            textButton = "Salvar alterações",
+                            onClick = {
+                                var message = false
+                                scope.launch(Dispatchers.IO) {
+                                    if (numeroSolicitacao.isEmpty()
+                                        || novaDescricao.isEmpty()
+                                        || novaCategoria.isEmpty()
+                                        || novoStatusSolicitacao.isEmpty()
+                                        || novoArmazem.isEmpty()
+                                    ) {
+                                        message = false
+                                    } else {
+                                        message = true
+                                        scope.launch(Dispatchers.IO){
+                                            dao.updateSolicitacao(
+                                                numeroSolicitacao,
+                                                novoPedidoCompra,
+                                                novaDescricao,
+                                                novoStatusSolicitacao,
+                                                novaCategoria,
+                                                novoArmazem,
+                                                novaObservacao,
+                                                novaDataPrevisaoEntrega)
+                                        }
+                                    }
+                                }
+                                scope.launch(Dispatchers.Main) {
+                                    if (message) {
+                                        Toast.makeText(
+                                            context,
+                                            "Solicitação alterada",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                        navController.popBackStack()
+                                    } else {
+                                        Toast.makeText(
+                                            context,
+                                            "Preencha todos os campos necessários",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
+                                }
+
+                            },
+                        )
+                    }
+                }
+            }
+        },
         containerColor = DarkBackground,
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
     ) {
         Column(
             modifier = Modifier
@@ -126,13 +220,40 @@ fun EditarSolicitacaoCompra(navController: NavController, numeroSolicitacao: Str
                 val solicitacao = solicitacaoState.value
                 if (solicitacao != null) {
 
+                    Row (modifier = Modifier
+                        .padding(top = 20.dp)){
+                        Box(modifier = Modifier
+                            .weight(1f)
+                            .padding(horizontal = 4.dp)) {
+                            CalendarioPopUp(
+                                txtButton = "Data criação",
+                                onDateSelected = { date ->
+                                    novaDataCriacao = date
+                                },
+                                initialDate = novaDataCriacao
+                            )
+                        }
+                        Box(modifier = Modifier
+                            .weight(1f)
+                            .padding(horizontal = 4.dp)) {
+                            CalendarioPopUp(
+                                txtButton = "Data previsão entrega",
+                                onDateSelected = { date ->
+                                    novaDataPrevisaoEntrega = date
+                                },
+                                initialDate = novaDataPrevisaoEntrega
+                            )
+                        }
+
+                    }
+
                     OutlinedTextFieldCustom(
                         value = solicitacao.numeroSolicitacao,
                         onValueChange = {},
                         label = { Text(text = "Numero Solicitação") },
                         keyboardOptions = KeyboardOptions.Default,
                         modifier = Modifier
-                            .padding(top = 20.dp)
+                            .padding(top = 10.dp)
                             .fillMaxWidth(),
                         readOnly = true
                     )
@@ -221,12 +342,9 @@ fun EditarSolicitacaoCompra(navController: NavController, numeroSolicitacao: Str
                         modifier = Modifier
                             .fillMaxHeight()
                             .fillMaxWidth()
-                            .padding(top = 10.dp),
+                            .padding(top = 10.dp, bottom = 70.dp),
                         maxLines = Int.MAX_VALUE
                     )
-
-                    Text("Descrição da solicitação: ${solicitacao.descricao}")
-                    Text("Data de criação: ${solicitacao.dataCriacao}")
                 }
             }
         }

@@ -9,6 +9,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.ShapeDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -28,14 +29,18 @@ import java.time.format.DateTimeFormatter
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CalendarioPopUp(
-    txtButton: String ,
-    onDateSelected: (LocalDate) -> Unit
+    txtButton: String,
+    onDateSelected: (LocalDate) -> Unit,
+    initialDate: LocalDate
 ) {
     val calendarState = rememberUseCaseState()
-    var selectedDate by remember { mutableStateOf<LocalDate>(LocalDate.now())}
+    var selectedDate by remember { mutableStateOf(initialDate) }
 
-    Column(
-    ) {
+    LaunchedEffect(initialDate) {
+        selectedDate = initialDate
+    }
+
+    Column {
         OutlinedButton(
             onClick = { calendarState.show() },
             modifier = Modifier.fillMaxWidth(),
@@ -53,7 +58,7 @@ fun CalendarioPopUp(
             state = calendarState,
             selection = CalendarSelection.Date { date ->
                 selectedDate = date
-                onDateSelected (date)
+                onDateSelected(date)
             }
         )
     }
