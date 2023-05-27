@@ -29,7 +29,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.ShapeDefaults
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
@@ -48,7 +47,6 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -60,8 +58,7 @@ import com.vinicius.minhassolicitacoesdecompra.model.SolicitacaoDeCompra
 import com.vinicius.minhassolicitacoesdecompra.ui.theme.BlueCircle
 import com.vinicius.minhassolicitacoesdecompra.ui.theme.DarkBackground
 import com.vinicius.minhassolicitacoesdecompra.ui.theme.GreenCircle
-import com.vinicius.minhassolicitacoesdecompra.ui.theme.GreyBox
-import com.vinicius.minhassolicitacoesdecompra.ui.theme.GreyText
+import com.vinicius.minhassolicitacoesdecompra.ui.theme.GreyCardBox
 import com.vinicius.minhassolicitacoesdecompra.ui.theme.GreyTextBox
 import com.vinicius.minhassolicitacoesdecompra.ui.theme.RedCircle
 import com.vinicius.minhassolicitacoesdecompra.ui.theme.YellowBasic
@@ -116,7 +113,7 @@ fun Home(navController: NavController){
                     .fillMaxWidth()
                     .height(150.dp),
                 shape = ShapeDefaults.Medium,
-                colors = CardDefaults.cardColors(GreyBox),
+                colors = CardDefaults.cardColors(GreyCardBox),
                 elevation = CardDefaults.cardElevation(defaultElevation = 7.dp)
             ) {
                 Text(
@@ -218,7 +215,7 @@ fun Home(navController: NavController){
                 colors = TextFieldDefaults.outlinedTextFieldColors(
                     textColor = Color.White,
                     disabledTextColor = GreyTextBox,
-                    containerColor = GreyBox,
+                    containerColor = GreyCardBox,
                     unfocusedLabelColor = GreyTextBox,
                     focusedLabelColor = YellowDefault,
                     focusedBorderColor = YellowDefault),

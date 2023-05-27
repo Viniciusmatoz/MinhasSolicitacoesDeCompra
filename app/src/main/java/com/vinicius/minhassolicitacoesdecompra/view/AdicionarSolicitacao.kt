@@ -5,27 +5,22 @@ import android.os.Build
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.ShapeDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
@@ -46,20 +41,18 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.maxkeppeler.sheets.list.models.ListOption
 import com.vinicius.minhassolicitacoesdecompra.AppDataBase
+import com.vinicius.minhassolicitacoesdecompra.components.ButtonCustom
+import com.vinicius.minhassolicitacoesdecompra.components.OutlinedButtonPopUpCustom
+import com.vinicius.minhassolicitacoesdecompra.components.OutlinedTextFieldCustom
 import com.vinicius.minhassolicitacoesdecompra.dao.SolicitacaoDao
-import com.vinicius.minhassolicitacoesdecompra.exposedDropDownMenu.armazemLista
-import com.vinicius.minhassolicitacoesdecompra.exposedDropDownMenu.calendarioPopUp
-import com.vinicius.minhassolicitacoesdecompra.exposedDropDownMenu.categoriaLista
-import com.vinicius.minhassolicitacoesdecompra.exposedDropDownMenu.statusSolicitacaoDeCompra
+import com.vinicius.minhassolicitacoesdecompra.exposedDropDownMenu.CalendarioPopUp
 import com.vinicius.minhassolicitacoesdecompra.model.SolicitacaoDeCompra
 import com.vinicius.minhassolicitacoesdecompra.ui.theme.DarkBackground
-import com.vinicius.minhassolicitacoesdecompra.ui.theme.GreyBox
+import com.vinicius.minhassolicitacoesdecompra.ui.theme.GreyCardBox
 import com.vinicius.minhassolicitacoesdecompra.ui.theme.GreyDefalt
-import com.vinicius.minhassolicitacoesdecompra.ui.theme.GreyDisableButton
-import com.vinicius.minhassolicitacoesdecompra.ui.theme.GreyText
 import com.vinicius.minhassolicitacoesdecompra.ui.theme.RedCircle
-import com.vinicius.minhassolicitacoesdecompra.ui.theme.YellowDefault
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -67,9 +60,9 @@ import java.time.LocalDate
 
 
 private lateinit var solicitacaoDao: SolicitacaoDao
-@RequiresApi(Build.VERSION_CODES.O)
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "SuspiciousIndentation")
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AdicionarSolicitacao (navController: NavController){
 
@@ -92,7 +85,7 @@ fun AdicionarSolicitacao (navController: NavController){
         topBar = {
             TopAppBar(
                 modifier = Modifier.padding(bottom = 30.dp),
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(GreyBox),
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(GreyCardBox),
                 title = {
                     Text(
                         text = "Adicionar Solicitação de Compra",
@@ -116,47 +109,39 @@ fun AdicionarSolicitacao (navController: NavController){
                   ) {
                       Row (modifier = Modifier
                           .fillMaxWidth()
-                          .padding(start = 20.dp, end = 20.dp, top = 13.dp, bottom = 13.dp),
+                          .padding(top = 13.dp, bottom = 13.dp),
                           verticalAlignment = Alignment.Bottom,
                           horizontalArrangement = Arrangement.SpaceAround
                       ){
-                          Button(
-                              modifier = Modifier
-                                  .height(60.dp)
-                                  .width(165.dp),
-                              onClick = {navController.popBackStack()},
-                              elevation = ButtonDefaults.buttonElevation(10.dp),
-                              colors = ButtonDefaults.buttonColors(GreyDefalt),
-                          ) {
-                              Text(
-                                  text = "Cancelar",
-                                  color = Color.White,
-                                  fontSize = 20.sp )
+                          Box(modifier = Modifier
+                              .weight(1f)
+                              .padding(horizontal = 4.dp)) {
+                              ButtonCustom(
+                                  modifier = Modifier.fillMaxWidth(),
+                                  onClick = { navController.popBackStack() },
+                                  textButton = "Cancelar",
+                                  colorContainerButton = GreyDefalt,
+                                  colorTextButton = Color.White
+                              )
                           }
-                          Spacer(modifier = Modifier.padding(15.dp))
-                          Button(
-                              enabled = !solicitacaoExistente,
-                              colors = ButtonDefaults.buttonColors(
-                                  containerColor = YellowDefault,
-                                  contentColor = DarkBackground,
-                                  disabledContainerColor = GreyDisableButton,
-                                  disabledContentColor = Color.White
-                              ),
-                              modifier = Modifier
-                                  .height(60.dp)
-                                  .width(165.dp),
-                              onClick = {
-                                  var message = false
-
-                                  scope.launch(Dispatchers.IO){
-                                      if (numeroSolicitacao.isEmpty()
-                                          || descricaoSolicitacao.isEmpty()
-                                          || categoriaSolicitacao.isEmpty()
-                                          || statusSolicitacao.isEmpty()
-                                          || armazemSolicitacao.isEmpty()
-                                      ){
-                                          message = false
-                                      } else {
+                          Box(modifier = Modifier
+                              .weight(1f)
+                              .padding(horizontal = 4.dp)) {
+                              ButtonCustom(
+                                  modifier = Modifier.fillMaxWidth(),
+                                  textButton = "Adicionar",
+                                  enabled = !solicitacaoExistente,
+                                  onClick = {
+                                      var message = false
+                                      scope.launch(Dispatchers.IO) {
+                                          if (numeroSolicitacao.isEmpty()
+                                              || descricaoSolicitacao.isEmpty()
+                                              || categoriaSolicitacao.isEmpty()
+                                              || statusSolicitacao.isEmpty()
+                                              || armazemSolicitacao.isEmpty()
+                                          ) {
+                                              message = false
+                                          } else {
                                               message = true
                                               val solicitacao = SolicitacaoDeCompra(
                                                   numeroSolicitacao,
@@ -169,27 +154,30 @@ fun AdicionarSolicitacao (navController: NavController){
                                                   dataPrevisaoEntrega,
                                                   dataCriacao
                                               )
-                                          solicitacaoDao = AppDataBase.getInstance(context).solicitacaoDao()
+                                              solicitacaoDao =
+                                                  AppDataBase.getInstance(context).solicitacaoDao()
                                               listaSolicitacoes.add(solicitacao)
                                               solicitacaoDao.gravar(listaSolicitacoes)
                                           }
                                       }
-                                  scope.launch(Dispatchers.Main){
-                                      if (message){
-                                          Toast.makeText(context, "Solicitação adicionada", Toast.LENGTH_SHORT).show()
-                                          navController.popBackStack()
-                                      }else {
-                                          Toast.makeText(context, "Preencha todos os campos", Toast.LENGTH_SHORT).show()
+                                      scope.launch(Dispatchers.Main) {
+                                          if (message) {
+                                              Toast.makeText(
+                                                  context,
+                                                  "Solicitação adicionada",
+                                                  Toast.LENGTH_SHORT
+                                              ).show()
+                                              navController.popBackStack()
+                                          } else {
+                                              Toast.makeText(
+                                                  context,
+                                                  "Preencha todos os campos",
+                                                  Toast.LENGTH_SHORT
+                                              ).show()
+                                          }
                                       }
-                                  }
 
-                              },
-                              elevation = ButtonDefaults.buttonElevation(10.dp),
-                          ) {
-                              Text(
-                                  text = "Adicionar",
-                                  fontSize = 20.sp,
-                                  fontWeight = FontWeight.Bold
+                                  },
                               )
                           }
                       }
@@ -205,16 +193,31 @@ fun AdicionarSolicitacao (navController: NavController){
 
             Row (modifier = Modifier
                 .padding(top = 80.dp, start = 10.dp, end = 10.dp, bottom = 10.dp)){
-                calendarioPopUp(
-                    txtButton = "Data previsão entrega",
-                    onDateSelected ={
-                        date -> dataCriacao = date
-                    }
-                )
+                Box(modifier = Modifier
+                    .weight(1f)
+                    .padding(horizontal = 4.dp)) {
+                    CalendarioPopUp(
+                        txtButton = "Data criação",
+                        onDateSelected = { date ->
+                            dataCriacao = date
+                        }
+                    )
+                }
+                Box(modifier = Modifier
+                    .weight(1f)
+                    .padding(horizontal = 4.dp)) {
+                    CalendarioPopUp(
+                        txtButton = "Data previsão entrega",
+                        onDateSelected = { date ->
+                            dataPrevisaoEntrega = date
+                        }
+                    )
+                }
+
             }
 
 
-            OutlinedTextField(
+            OutlinedTextFieldCustom(
                 value = numeroSolicitacao,
                 onValueChange = { newNumber ->
                     numeroSolicitacao = newNumber
@@ -236,24 +239,18 @@ fun AdicionarSolicitacao (navController: NavController){
                 label = { Text(text = "Número da Solicitação") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 colors = TextFieldDefaults.outlinedTextFieldColors(
-                    cursorColor = YellowDefault,
-                    focusedBorderColor = YellowDefault,
                     textColor = if (solicitacaoExistente) {
                         RedCircle
                     } else {
                         Color.White
                     },
-                    disabledTextColor = Color.White
                 ),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(start = 10.dp, top = 0.dp, end = 10.dp, bottom = 10.dp),
-                singleLine = true,
-                maxLines = 1,
-                shape = ShapeDefaults.Medium,
             )
 
-            OutlinedTextField(
+            OutlinedTextFieldCustom(
                 value = numeroPedidoCompra ,
                 onValueChange = {
                     numeroPedidoCompra = it
@@ -264,25 +261,30 @@ fun AdicionarSolicitacao (navController: NavController){
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Number
                 ),
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    cursorColor = YellowDefault,
-                    focusedBorderColor = YellowDefault,
-                    textColor = Color.White,
-                    disabledTextColor = Color.White
-                ),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(start = 10.dp, top = 0.dp, end = 10.dp, bottom = 10.dp),
-                singleLine = true,
-                maxLines = 1,
-                shape = ShapeDefaults.Medium
             )
+
             Row (modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 10.dp, top = 0.dp, end = 10.dp, bottom = 10.dp)){
-                statusSolicitacaoDeCompra(onStatusSelectedChanged = { newStatus -> statusSolicitacao = newStatus})
+
+                OutlinedButtonPopUpCustom(
+                    onOptionSelectedChanged = { novoStatus ->
+                        statusSolicitacao = novoStatus
+                    },
+                    optionsList = listOf(
+                        ListOption(titleText = "SC em andamento"),
+                        ListOption(titleText = "PC em aprovação"),
+                        ListOption(titleText = "Aguardando Entrega"),
+                        ListOption(titleText = "Outros")
+                    ),
+                    txtTitleOutlinedButton = "Status: ${statusSolicitacao.ifEmpty { "selecione uma opção" }}"
+                )
+                
             }
-            OutlinedTextField(
+            OutlinedTextFieldCustom(
                 value = descricaoSolicitacao ,
                 onValueChange = {
                     descricaoSolicitacao = it
@@ -294,32 +296,45 @@ fun AdicionarSolicitacao (navController: NavController){
                     keyboardType = KeyboardType.Text,
                     imeAction = ImeAction.Done
                 ),
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    cursorColor = YellowDefault,
-                    focusedBorderColor = YellowDefault,
-                    textColor = Color.White,
-                    disabledTextColor = Color.White,
-                    unfocusedBorderColor = GreyText,
-                    disabledBorderColor = GreyText
-                ),
                 modifier = Modifier
                     .height(135.dp)
                     .fillMaxWidth()
                     .padding(start = 10.dp, top = 0.dp, end = 10.dp, bottom = 10.dp),
-                shape = ShapeDefaults.Medium,
-
+                maxLines = Int.MAX_VALUE
             )
+
             Row (modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 10.dp, top = 0.dp, end = 10.dp, bottom = 10.dp)){
-                armazemLista(onStorageSelectedChanged = {newStorage -> armazemSolicitacao = newStorage})
+                
+                OutlinedButtonPopUpCustom(
+                    onOptionSelectedChanged ={ newStorage -> armazemSolicitacao = newStorage},
+                    optionsList = listOf(
+                        ListOption(titleText = "Distrito"),
+                        ListOption(titleText = "Novo Paraíso"),
+                        ListOption(titleText = "Monte Cristo"),
+                        ListOption(titleText = "Outros"),
+                    ),
+                    txtTitleOutlinedButton = "Armazém: ${armazemSolicitacao.ifEmpty { "selecione uma opção" }}"
+                )
             }
             Row (modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 10.dp, top = 0.dp, end = 10.dp, bottom = 10.dp)){
-                categoriaLista(onCategorySelectedChanged = {newCategory -> categoriaSolicitacao = newCategory})
+
+                OutlinedButtonPopUpCustom(
+                    onOptionSelectedChanged ={ newCategory -> categoriaSolicitacao = newCategory},
+                    optionsList = listOf(
+                        ListOption(titleText = "Estoque"),
+                        ListOption(titleText = "Insumos"),
+                        ListOption(titleText = "Serviço terceiros"),
+                        ListOption(titleText = "Transportes"),
+                        ListOption(titleText = "Outros"),
+                    ),
+                    txtTitleOutlinedButton = "Categoria: ${categoriaSolicitacao.ifEmpty { "selecione uma opção" }}"
+                )
             }
-            OutlinedTextField(
+            OutlinedTextFieldCustom(
                 value = observacoes ,
                 onValueChange = {
                     observacoes = it
@@ -331,17 +346,11 @@ fun AdicionarSolicitacao (navController: NavController){
                     keyboardType = KeyboardType.Text,
                     imeAction = ImeAction.Done
                 ),
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    cursorColor = YellowDefault,
-                    focusedBorderColor = YellowDefault,
-                    textColor = Color.White,
-                    disabledTextColor = Color.White
-                ),
                 modifier = Modifier
                     .fillMaxHeight()
                     .fillMaxWidth()
                     .padding(start = 10.dp, top = 0.dp, end = 10.dp, bottom = 10.dp),
-                shape = ShapeDefaults.Medium
+                maxLines = Int.MAX_VALUE
             )
         }
     }
