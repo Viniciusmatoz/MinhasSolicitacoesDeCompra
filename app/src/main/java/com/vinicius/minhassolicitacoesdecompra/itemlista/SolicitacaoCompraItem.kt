@@ -1,7 +1,9 @@
 package com.vinicius.minhassolicitacoesdecompra.itemlista
 
+import android.app.AlertDialog
 import android.content.Context
 import android.os.Build
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
@@ -18,10 +20,12 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.ShapeDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -29,14 +33,23 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.vinicius.minhassolicitacoesdecompra.AppDataBase
 import com.vinicius.minhassolicitacoesdecompra.R
+import com.vinicius.minhassolicitacoesdecompra.dao.SolicitacaoDao
 import com.vinicius.minhassolicitacoesdecompra.model.SolicitacaoDeCompra
 import com.vinicius.minhassolicitacoesdecompra.ui.theme.BlueCircle
 import com.vinicius.minhassolicitacoesdecompra.ui.theme.GreenCircle
 import com.vinicius.minhassolicitacoesdecompra.ui.theme.GreyCardBox
+import com.vinicius.minhassolicitacoesdecompra.ui.theme.GreyDefalt
+import com.vinicius.minhassolicitacoesdecompra.ui.theme.GreyDisableButton
+import com.vinicius.minhassolicitacoesdecompra.ui.theme.GreyTextBox
 import com.vinicius.minhassolicitacoesdecompra.ui.theme.Purple80
 import com.vinicius.minhassolicitacoesdecompra.ui.theme.RedCircle
+import com.vinicius.minhassolicitacoesdecompra.ui.theme.YellowBasic
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.time.format.DateTimeFormatter
+
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
@@ -48,11 +61,36 @@ fun SolicitacaoCompraItem(
     context: Context
 ){
 
+    val scope = rememberCoroutineScope()
+    val context = LocalContext.current
+    val dao = AppDataBase.getInstance(context).solicitacaoDao()
+
+    val solicitacao = listaSolicitacoes[position]
+
     val numeroSolicitacao = listaSolicitacoes[position].numeroSolicitacao
     val numeroPedido = listaSolicitacoes[position].numeroPedido
     val statusSolicitacao = listaSolicitacoes[position].statusSolicitacao
     val descricaoSolicitacao = listaSolicitacoes[position].descricao
     val dataCriacao = listaSolicitacoes[position].dataCriacao
+
+    fun alertDialogDeleteSolicitacao(){
+        val alertDialog = AlertDialog.Builder(context)
+        alertDialog
+            .setTitle("Excluir Solicitação")
+            .setMessage("Tem certeza?")
+        alertDialog.setPositiveButton("OK"){_,_->
+            scope.launch(Dispatchers.IO){
+                dao.deleteSolicitacao(numeroSolicitacao)
+                listaSolicitacoes.remove(solicitacao)
+            }
+            scope.launch(Dispatchers.Main){
+                navController.navigate("home")
+                Toast.makeText(context,"Solicitação removida com sucesso",Toast.LENGTH_SHORT).show()
+            }
+        }
+        alertDialog.setNegativeButton("Cancelar"){_,_->}
+        alertDialog.show()
+    }
 
 
     Card(
@@ -88,8 +126,8 @@ fun SolicitacaoCompraItem(
 
 
                 Text(
-                    text = "SC $numeroSolicitacao".take(9),
-                    color = GreyCardBox,
+                    text = "SC $numeroSolicitacao".take(7),
+                    color = Color.White,
                     fontSize = 22.sp,
                     fontWeight = FontWeight.ExtraBold,
                     modifier = Modifier
@@ -97,14 +135,14 @@ fun SolicitacaoCompraItem(
                     )
                 Text(
                     text = "PC $numeroPedido".take(9),
-                    color = Color.White,
+                    color = GreyTextBox,
                     fontSize = 22.sp,
                     fontWeight = FontWeight.ExtraBold,
                     modifier = Modifier
                         .padding(top = 5.dp, start = 15.dp)
                 )
                 Text(
-                    text = dataCriacao.minusMonths(1).format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
+                    text = dataCriacao.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
                     color = Color.White,
                     fontSize = 12.sp,
                     fontWeight = FontWeight.SemiBold,
@@ -133,7 +171,9 @@ fun SolicitacaoCompraItem(
                         imageVector = ImageVector.vectorResource(id = R.drawable.ic_star),
                         contentDescription = "icon star")
                 }
-                IconButton(onClick = { /*TODO*/ },
+                IconButton(onClick = {
+                    alertDialogDeleteSolicitacao()
+                },
                 ){
                     Image(
                         imageVector = ImageVector.vectorResource(id = R.drawable.ic_delete),

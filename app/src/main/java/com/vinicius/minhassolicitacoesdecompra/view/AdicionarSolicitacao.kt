@@ -279,7 +279,7 @@ fun AdicionarSolicitacao (navController: NavController){
                     optionsList = listOf(
                         ListOption(titleText = "SC em andamento"),
                         ListOption(titleText = "PC em aprovação"),
-                        ListOption(titleText = "Aguardando Entrega"),
+                        ListOption(titleText = "Aguardando entrega"),
                         ListOption(titleText = "Outros")
                     ),
                     txtTitleOutlinedButton = "Status: ${statusSolicitacao.ifEmpty { "selecione uma opção" }}"

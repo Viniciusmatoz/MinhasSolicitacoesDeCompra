@@ -178,6 +178,7 @@ fun EditarSolicitacaoCompra(navController: NavController, numeroSolicitacao: Str
                                                 novaCategoria,
                                                 novoArmazem,
                                                 novaObservacao,
+                                                novaDataCriacao,
                                                 novaDataPrevisaoEntrega)
                                         }
                                     }
@@ -277,7 +278,7 @@ fun EditarSolicitacaoCompra(navController: NavController, numeroSolicitacao: Str
                         optionsList = listOf(
                             ListOption(titleText = "SC em andamento"),
                             ListOption(titleText = "PC em aprovação"),
-                            ListOption(titleText = "Aguardando Entrega"),
+                            ListOption(titleText = "Aguardando entrega"),
                             ListOption(titleText = "Outros")
                         ),
                         txtTitleOutlinedButton = "Status: $novoStatusSolicitacao"

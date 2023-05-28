@@ -20,7 +20,7 @@ interface SolicitacaoDao {
     fun getById(id: String): SolicitacaoDeCompra?
     @Query("UPDATE tabela_solicitacoes_compra SET pedido_de_compra = :novoPedidoCompra,"+
     "descricao = :novaDescricao, status_solitacao = :novoStatus, categoria_solicitacao = :novaCategoria, armazem_destino = :novoArmazemDestino,"+
-            "observacoes = :novaObservacoes, data_previsao_entrega = :novaDataPrevisaoEntrega WHERE numero_solicitacao = :id")
+            "observacoes = :novaObservacoes,data_criacao = :novaDataCriacao ,data_previsao_entrega = :novaDataPrevisaoEntrega WHERE numero_solicitacao = :id")
     fun updateSolicitacao(
         id: String,
         novoPedidoCompra: String,
@@ -29,9 +29,10 @@ interface SolicitacaoDao {
         novaCategoria: String,
         novoArmazemDestino: String,
         novaObservacoes: String,
+        novaDataCriacao: LocalDate,
         novaDataPrevisaoEntrega: LocalDate
     )
 
     @Query("DELETE FROM tabela_solicitacoes_compra WHERE numero_solicitacao = :id")
-    fun deleteSolicitacao(id: Int)
+    fun deleteSolicitacao(id: String)
 }
