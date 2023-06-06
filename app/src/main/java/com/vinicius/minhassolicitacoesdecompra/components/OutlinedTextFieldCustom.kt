@@ -24,7 +24,15 @@ fun OutlinedTextFieldCustom(
     keyboardOptions: KeyboardOptions,
     modifier: Modifier,
     maxLines: Int = 1,
-    colors: TextFieldColors = TextFieldDefaults.outlinedTextFieldColors(),
+    colors: TextFieldColors = TextFieldDefaults.outlinedTextFieldColors(
+        cursorColor = YellowDefault,
+        focusedBorderColor = YellowDefault,
+        unfocusedBorderColor = GreyBox,
+        textColor = Color.White,
+        disabledTextColor = Color.White,
+        focusedLabelColor = YellowBasic,
+        unfocusedLabelColor = GreyTextBox
+    ),
     readOnly: Boolean = false,
 ){
     OutlinedTextField(
@@ -35,15 +43,7 @@ fun OutlinedTextFieldCustom(
         modifier = modifier,
         maxLines = maxLines,
         readOnly = readOnly,
-        colors = TextFieldDefaults.outlinedTextFieldColors(
-            cursorColor = YellowDefault,
-            focusedBorderColor = YellowDefault,
-            unfocusedBorderColor = GreyBox,
-            textColor = Color.White,
-            disabledTextColor = Color.White,
-            focusedLabelColor = YellowBasic,
-            unfocusedLabelColor = GreyTextBox
-        ),
+        colors = colors,
         shape = ShapeDefaults.Medium
     )
 }

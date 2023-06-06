@@ -13,7 +13,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material3.BottomAppBar
@@ -189,6 +191,7 @@ fun AdicionarSolicitacao (navController: NavController){
             modifier = Modifier
                 .fillMaxSize()
                 .padding(bottom = 75.dp)
+                .verticalScroll(rememberScrollState())
         ) {
 
             Row (modifier = Modifier
@@ -239,7 +242,7 @@ fun AdicionarSolicitacao (navController: NavController){
                     }
                 },
                 label = { Text(text = "Número da Solicitação") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Done),
                 colors = TextFieldDefaults.outlinedTextFieldColors(
                     textColor = if (solicitacaoExistente) {
                         RedCircle
@@ -261,7 +264,8 @@ fun AdicionarSolicitacao (navController: NavController){
                     Text(text = "Pedido de Compra")
                 },
                 keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Number
+                    keyboardType = KeyboardType.Number,
+                    imeAction = ImeAction.Done
                 ),
                 modifier = Modifier
                     .fillMaxWidth()

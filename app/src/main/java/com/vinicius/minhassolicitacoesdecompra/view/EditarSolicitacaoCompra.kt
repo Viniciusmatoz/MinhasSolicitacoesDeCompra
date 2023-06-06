@@ -22,9 +22,9 @@ import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -47,7 +47,6 @@ import androidx.navigation.NavController
 import com.maxkeppeler.sheets.list.models.ListOption
 import com.vinicius.minhassolicitacoesdecompra.AppDataBase
 import com.vinicius.minhassolicitacoesdecompra.components.ButtonCustom
-import com.vinicius.minhassolicitacoesdecompra.components.OutlinedButtonCustom
 import com.vinicius.minhassolicitacoesdecompra.components.OutlinedButtonPopUpCustom
 import com.vinicius.minhassolicitacoesdecompra.components.OutlinedTextFieldCustom
 import com.vinicius.minhassolicitacoesdecompra.exposedDropDownMenu.CalendarioPopUp
@@ -55,6 +54,7 @@ import com.vinicius.minhassolicitacoesdecompra.model.SolicitacaoDeCompra
 import com.vinicius.minhassolicitacoesdecompra.ui.theme.DarkBackground
 import com.vinicius.minhassolicitacoesdecompra.ui.theme.GreyCardBox
 import com.vinicius.minhassolicitacoesdecompra.ui.theme.GreyDefalt
+import com.vinicius.minhassolicitacoesdecompra.ui.theme.GreyTextBox
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -214,6 +214,7 @@ fun EditarSolicitacaoCompra(navController: NavController, numeroSolicitacao: Str
             modifier = Modifier
                 .fillMaxSize()
                 .padding(top = 60.dp, start = 10.dp, end = 10.dp, bottom = 20.dp)
+                .verticalScroll(rememberScrollState())
         ) {
             if (errorState.value != null) {
                 Text(errorState.value!!)
@@ -256,7 +257,8 @@ fun EditarSolicitacaoCompra(navController: NavController, numeroSolicitacao: Str
                         modifier = Modifier
                             .padding(top = 10.dp)
                             .fillMaxWidth(),
-                        readOnly = true
+                        readOnly = true,
+                        colors = TextFieldDefaults.outlinedTextFieldColors(textColor = GreyTextBox, disabledLabelColor = GreyTextBox)
                     )
 
                     OutlinedTextFieldCustom(
@@ -341,7 +343,7 @@ fun EditarSolicitacaoCompra(navController: NavController, numeroSolicitacao: Str
                             imeAction = ImeAction.Done
                         ),
                         modifier = Modifier
-                            .fillMaxHeight()
+                            .height(190.dp)
                             .fillMaxWidth()
                             .padding(top = 10.dp, bottom = 70.dp),
                         maxLines = Int.MAX_VALUE
