@@ -1,6 +1,7 @@
 package com.vinicius.minhassolicitacoesdecompra.view
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.os.Build
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -13,12 +14,17 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.Button
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -61,7 +67,7 @@ import kotlinx.coroutines.withContext
 import java.time.LocalDate
 
 @RequiresApi(Build.VERSION_CODES.O)
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "UnrememberedMutableState")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditarSolicitacaoCompra(navController: NavController, numeroSolicitacao: String) {
@@ -70,9 +76,10 @@ fun EditarSolicitacaoCompra(navController: NavController, numeroSolicitacao: Str
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
     val dao = AppDataBase.getInstance(context).solicitacaoDao()
-
+    val isMenuOpen = remember{ mutableStateOf(false)}
     val solicitacaoState = remember { mutableStateOf<SolicitacaoDeCompra?>(null) }
     val errorState = remember { mutableStateOf<String?>(null) }
+    var buttonEnabled = true
 
     // Variáveis para armazenar os valores editáveis
     var novoPedidoCompra by remember { mutableStateOf("") }
@@ -127,6 +134,37 @@ fun EditarSolicitacaoCompra(navController: NavController, numeroSolicitacao: Str
                     ) {
                         Icon(Icons.Rounded.ArrowBack, contentDescription = "Icone voltar", tint = Color.White)
                     }
+                },
+                actions = {
+                    IconButton(onClick = {isMenuOpen.value = true })
+                    {
+                        Icon(Icons.Rounded.MoreVert, contentDescription = "Menu")
+                    }
+                    DropdownMenu(
+                        expanded = isMenuOpen.value,
+                        onDismissRequest = { isMenuOpen.value = false }
+                    ) {
+                        DropdownMenuItem(
+                            text = { Text(text = "Finalizar Solicitação") },
+                            onClick = {
+                                    val alertDialog = AlertDialog.Builder(context)
+                                    alertDialog
+                                        .setTitle("Finalizar Solicitação")
+                                        .setMessage("Deseja Finalizar esta Solicitação?")
+                                    alertDialog.setPositiveButton("Sim"){_,_->
+                                        scope.launch(Dispatchers.IO){
+                                            dao.deleteSolicitacao(numeroSolicitacao)
+                                        }
+                                        scope.launch(Dispatchers.Main){
+                                            navController.popBackStack()
+                                            Toast.makeText(context,"Solicitação finalizada com sucesso",Toast.LENGTH_SHORT).show()
+                                        }
+                                    }
+                                    alertDialog.setNegativeButton("Cancelar"){_,_->}
+                                    alertDialog.show()
+                            }
+                        )
+                    }
                 }
             )
         },
@@ -156,6 +194,7 @@ fun EditarSolicitacaoCompra(navController: NavController, numeroSolicitacao: Str
                         .padding(horizontal = 4.dp)) {
                         ButtonCustom(
                             modifier = Modifier.fillMaxWidth(),
+                            enabled = buttonEnabled,
                             textButton = "Salvar alterações",
                             onClick = {
                                 var message = false
@@ -167,6 +206,7 @@ fun EditarSolicitacaoCompra(navController: NavController, numeroSolicitacao: Str
                                         || novoArmazem.isEmpty()
                                     ) {
                                         message = false
+                                        buttonEnabled = false
                                     } else {
                                         message = true
                                         scope.launch(Dispatchers.IO){

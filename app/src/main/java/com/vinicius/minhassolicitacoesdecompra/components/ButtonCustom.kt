@@ -33,7 +33,8 @@ fun ButtonCustom(
             containerColor = colorContainerButton,
             disabledContainerColor = GreyDisableButton,
             disabledContentColor = Color.White
-        )
+        ),
+        enabled = enabled
     ) {
         Text(
             text = textButton,
