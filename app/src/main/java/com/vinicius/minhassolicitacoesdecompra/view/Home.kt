@@ -32,7 +32,9 @@ import androidx.compose.material3.ShapeDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -86,9 +88,24 @@ fun Home(navController: NavController){
         }
     }
 
+    var search by remember { mutableStateOf("") }
 
-    var search by remember {
-        mutableStateOf("")
+    val listaFiltrada = remember {
+        mutableStateListOf<SolicitacaoDeCompra>()
+    }
+
+    LaunchedEffect(search) {
+        val searchLowerCase = search.lowercase()
+        listaFiltrada.clear()
+        listaFiltrada.addAll(listaSolicitacoes.filter { solicitacao ->
+            solicitacao.numeroSolicitacao.contains(searchLowerCase) ||
+                    solicitacao.numeroPedido.contains(searchLowerCase) ||
+                    solicitacao.descricao.contains(searchLowerCase) ||
+                    solicitacao.statusSolicitacao.contains(searchLowerCase) ||
+                    solicitacao.armazemDestino.contains(searchLowerCase) ||
+                    solicitacao.categoriaSolicitacao.contains(searchLowerCase) ||
+                    solicitacao.observacoesSolicitacao.contains(searchLowerCase)
+        })
     }
 
     Scaffold (
@@ -207,8 +224,8 @@ fun Home(navController: NavController){
                 onValueChange ={search = it},
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(55.dp)
-                    .padding(start = 15.dp, end = 15.dp, bottom = 10.dp),
+                    .height(60.dp)
+                    .padding(start = 15.dp, end = 15.dp),
                 singleLine = true,
                 label = {
                     Text(text = "Pesquisar")},
@@ -235,8 +252,8 @@ fun Home(navController: NavController){
                 }
             )
             LazyColumn {
-                itemsIndexed(listaSolicitacoes) { position, item ->
-                    SolicitacaoCompraItem(navController, position, listaSolicitacoes, context)
+                itemsIndexed(listaFiltrada) { position, item ->
+                    SolicitacaoCompraItem(navController, position, listaFiltrada, context)
                 }
             }
 
