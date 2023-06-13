@@ -5,7 +5,9 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -17,6 +19,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.Card
@@ -42,6 +45,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -154,11 +158,21 @@ fun Home(navController: NavController){
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally
                     ){
-                        Canvas(modifier = Modifier
-                            .size(55.dp),
-                            onDraw = {
-                                drawCircle(color = RedCircle)
-                            } )
+                        Box(modifier = Modifier
+                            .size(60.dp)
+                            .background(
+                                color = RedCircle,
+                                shape = RoundedCornerShape(50)),
+                        contentAlignment = Alignment.Center){
+                            val countText = listaSolicitacoes.count { it.statusSolicitacao == "SC em andamento" }
+                            Text(
+                                text = countText.toString(),
+                                color = Color.White,
+                                textAlign = TextAlign.Center,
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.ExtraBold
+                            )
+                        }
                         Text(
                             text = "SC em andamento",
                             modifier = Modifier
@@ -177,11 +191,22 @@ fun Home(navController: NavController){
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally
                     ){
-                        Canvas(modifier = Modifier
-                            .size(55.dp),
-                            onDraw = {
-                                drawCircle(BlueCircle)
-                            } )
+
+                        Box(modifier = Modifier
+                            .size(60.dp)
+                            .background(
+                                color = BlueCircle,
+                                shape = RoundedCornerShape(50)),
+                            contentAlignment = Alignment.Center){
+                            val countText = listaSolicitacoes.count { it.statusSolicitacao == "PC em aprovação" }
+                            Text(
+                                text = countText.toString(),
+                                color = Color.White,
+                                textAlign = TextAlign.Center,
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.ExtraBold
+                            )
+                        }
                         Text(
                             text = "PC em aprovação",
                             modifier = Modifier
@@ -200,11 +225,21 @@ fun Home(navController: NavController){
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally
                     ){
-                        Canvas(modifier = Modifier
-                            .size(55.dp),
-                            onDraw = {
-                                drawCircle(color = GreenCircle)
-                            } )
+                        Box(modifier = Modifier
+                            .size(60.dp)
+                            .background(
+                                color = GreenCircle,
+                                shape = RoundedCornerShape(50)),
+                            contentAlignment = Alignment.Center){
+                            val countText = listaSolicitacoes.count { it.statusSolicitacao == "Aguardando entrega" }
+                            Text(
+                                text = countText.toString(),
+                                color = Color.White,
+                                textAlign = TextAlign.Center,
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.ExtraBold
+                            )
+                        }
                         Text(
                             text = "Aguardando Entrega",
                             modifier = Modifier
