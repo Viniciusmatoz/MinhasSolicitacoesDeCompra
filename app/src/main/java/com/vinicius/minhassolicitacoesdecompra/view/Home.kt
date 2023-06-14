@@ -113,7 +113,7 @@ fun Home(navController: NavController){
     }
 
     Scaffold (
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize().fillMaxHeight(),
         containerColor = DarkBackground,
         floatingActionButton = {
             FloatingActionButton(
@@ -286,7 +286,7 @@ fun Home(navController: NavController){
                     }
                 }
             )
-            LazyColumn {
+            LazyColumn(modifier = Modifier.fillMaxWidth().fillMaxSize()) {
                 itemsIndexed(listaFiltrada) { position, item ->
                     SolicitacaoCompraItem(navController, position, listaFiltrada, context)
                 }

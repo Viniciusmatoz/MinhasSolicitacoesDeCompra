@@ -163,17 +163,12 @@ fun SolicitacaoCompraItem(
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier
                         .padding(top = 10.dp, start = 20.dp, bottom = 5.dp, end = 5.dp)
-                        .fillMaxWidth(0.70f)
+                        .fillMaxWidth(0.80f)
                 )
-                IconButton(onClick = { /*TODO*/ }, modifier = Modifier.padding(start = 8.dp)
-                ){
-                    Image(
-                        imageVector = ImageVector.vectorResource(id = R.drawable.ic_star),
-                        contentDescription = "icon star")
-                }
                 IconButton(onClick = {
                     alertDialogDeleteSolicitacao()
                 },
+                    modifier = Modifier.padding(start = 8.dp)
                 ){
                     Image(
                         imageVector = ImageVector.vectorResource(id = R.drawable.ic_delete),
