@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -53,6 +54,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -153,7 +155,7 @@ fun Home(navController: NavController){
                     horizontalArrangement = Arrangement.SpaceAround
                 ){
                     Column (modifier = Modifier
-                        .padding(top = 8.dp, start = 10.dp, end = 10.dp)
+                        .padding(top = 8.dp, start = 10.dp, end = 7.dp)
                         .fillMaxHeight(),
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally
@@ -176,17 +178,17 @@ fun Home(navController: NavController){
                         Text(
                             text = "SC em andamento",
                             modifier = Modifier
-                                .width(70.dp)
-                                .padding(top = 2.dp, bottom = 2.dp),
+                                .padding(top = 2.dp, bottom = 2.dp)
+                                .width(74.dp),
                             fontWeight = FontWeight.Medium,
                             fontStyle = FontStyle.Normal,
-                            fontSize = 14.sp,
+                            fontSize = 13.sp,
                             color = Color.White,
                             textAlign = TextAlign.Center
                         )
                     }
                     Column (modifier = Modifier
-                        .padding(top = 8.dp, start = 10.dp, end = 10.dp)
+                        .padding(top = 8.dp, end = 7.dp)
                         .fillMaxHeight(),
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally
@@ -204,7 +206,7 @@ fun Home(navController: NavController){
                                 color = Color.White,
                                 textAlign = TextAlign.Center,
                                 fontSize = 20.sp,
-                                fontWeight = FontWeight.ExtraBold
+                                fontWeight = FontWeight.ExtraBold,
                             )
                         }
                         Text(
@@ -214,13 +216,13 @@ fun Home(navController: NavController){
                                 .padding(top = 2.dp, bottom = 2.dp),
                             fontWeight = FontWeight.Medium,
                             fontStyle = FontStyle.Normal,
-                            fontSize = 14.sp,
+                            fontSize = 13.sp,
                             color = Color.White,
                             textAlign = TextAlign.Center
                         )
                     }
                     Column (modifier = Modifier
-                        .padding(top = 8.dp, start = 10.dp, end = 10.dp)
+                        .padding(top = 8.dp, end = 10.dp)
                         .fillMaxHeight(),
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally
@@ -247,7 +249,7 @@ fun Home(navController: NavController){
                                 .padding(top = 2.dp, bottom = 2.dp),
                             fontWeight = FontWeight.Medium,
                             fontStyle = FontStyle.Normal,
-                            fontSize = 14.sp,
+                            fontSize = 13.sp,
                             color = Color.White,
                             textAlign = TextAlign.Center
                         )
