@@ -36,6 +36,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -79,14 +80,14 @@ fun EditarSolicitacaoCompra(navController: NavController, numeroSolicitacao: Str
     var buttonEnabled = true
 
     // Variáveis para armazenar os valores editáveis
-    var novoPedidoCompra by remember { mutableStateOf("") }
-    var novaDataCriacao by remember { mutableStateOf<LocalDate>(LocalDate.now())}
-    var novaDataPrevisaoEntrega by remember { mutableStateOf<LocalDate>(LocalDate.now())}
-    var novaDescricao by remember { mutableStateOf("") }
-    var novoArmazem by remember { mutableStateOf("") }
-    var novaCategoria by remember { mutableStateOf("") }
-    var novaObservacao by remember { mutableStateOf("") }
-    var novoStatusSolicitacao by remember { mutableStateOf("") }
+    var novoPedidoCompra by rememberSaveable { mutableStateOf("") }
+    var novaDataCriacao by rememberSaveable { mutableStateOf<LocalDate>(LocalDate.now())}
+    var novaDataPrevisaoEntrega by rememberSaveable { mutableStateOf<LocalDate>(LocalDate.now())}
+    var novaDescricao by rememberSaveable { mutableStateOf("") }
+    var novoArmazem by rememberSaveable { mutableStateOf("") }
+    var novaCategoria by rememberSaveable { mutableStateOf("") }
+    var novaObservacao by rememberSaveable { mutableStateOf("") }
+    var novoStatusSolicitacao by rememberSaveable { mutableStateOf("") }
 
 
     LaunchedEffect(key1 = numeroSolicitacao) {

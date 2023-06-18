@@ -32,6 +32,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -72,16 +73,16 @@ fun AdicionarSolicitacao (navController: NavController){
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
 
-    var dataCriacao by remember { mutableStateOf<LocalDate>(LocalDate.now())}
-    var dataPrevisaoEntrega by remember { mutableStateOf<LocalDate>(LocalDate.now().plusMonths(1)) }
-    var numeroSolicitacao by remember { mutableStateOf("")}
-    var numeroPedidoCompra by remember { mutableStateOf("") }
-    var statusSolicitacao by remember { mutableStateOf("") }
-    var descricaoSolicitacao by remember { mutableStateOf("") }
-    var armazemSolicitacao by remember { mutableStateOf("") }
-    var categoriaSolicitacao by remember { mutableStateOf("") }
-    var observacoes by remember { mutableStateOf("") }
-    var solicitacaoExistente by remember { mutableStateOf(false) }
+    var dataCriacao by rememberSaveable { mutableStateOf<LocalDate>(LocalDate.now())}
+    var dataPrevisaoEntrega by rememberSaveable { mutableStateOf<LocalDate>(LocalDate.now().plusMonths(1)) }
+    var numeroSolicitacao by rememberSaveable { mutableStateOf("")}
+    var numeroPedidoCompra by rememberSaveable { mutableStateOf("") }
+    var statusSolicitacao by rememberSaveable { mutableStateOf("") }
+    var descricaoSolicitacao by rememberSaveable { mutableStateOf("") }
+    var armazemSolicitacao by rememberSaveable { mutableStateOf("") }
+    var categoriaSolicitacao by rememberSaveable { mutableStateOf("") }
+    var observacoes by rememberSaveable { mutableStateOf("") }
+    var solicitacaoExistente by rememberSaveable { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
