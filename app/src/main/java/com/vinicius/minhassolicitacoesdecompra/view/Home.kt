@@ -176,10 +176,10 @@ fun Home(navController: NavController){
                             )
                         }
                         Text(
-                            text = "SC em andamento",
+                            text = "SC em \nandamento",
                             modifier = Modifier
                                 .padding(top = 2.dp, bottom = 2.dp)
-                                .width(74.dp),
+                                .weight(1f),
                             fontWeight = FontWeight.Medium,
                             fontStyle = FontStyle.Normal,
                             fontSize = 13.sp,
@@ -210,9 +210,9 @@ fun Home(navController: NavController){
                             )
                         }
                         Text(
-                            text = "PC em aprovação",
+                            text = "PC em \naprovação",
                             modifier = Modifier
-                                .width(65.dp)
+                                .weight(1f)
                                 .padding(top = 2.dp, bottom = 2.dp),
                             fontWeight = FontWeight.Medium,
                             fontStyle = FontStyle.Normal,
@@ -243,9 +243,9 @@ fun Home(navController: NavController){
                             )
                         }
                         Text(
-                            text = "Aguardando Entrega",
+                            text = "Aguardando \nEntrega",
                             modifier = Modifier
-                                .width(75.dp)
+                                .weight(1f)
                                 .padding(top = 2.dp, bottom = 2.dp),
                             fontWeight = FontWeight.Medium,
                             fontStyle = FontStyle.Normal,
