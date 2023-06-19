@@ -81,6 +81,7 @@ fun AdicionarSolicitacao (navController: NavController){
     var dataCriacao by rememberSaveable { mutableStateOf<LocalDate>(LocalDate.now())}
     var dataPrevisaoEntrega by rememberSaveable { mutableStateOf<LocalDate>(LocalDate.now().plusMonths(1)) }
     var numeroSolicitacao by rememberSaveable { mutableStateOf("")}
+    val numeroSolicitacaoFormatado = numeroSolicitacao.padStart(6,'0')
     var numeroPedidoCompra by rememberSaveable { mutableStateOf("") }
     var statusSolicitacao by rememberSaveable { mutableStateOf("") }
     var descricaoSolicitacao by rememberSaveable { mutableStateOf("") }
@@ -152,7 +153,7 @@ fun AdicionarSolicitacao (navController: NavController){
                                           } else {
                                               message = true
                                               val solicitacao = SolicitacaoDeCompra(
-                                                  numeroSolicitacao,
+                                                  numeroSolicitacaoFormatado,
                                                   numeroPedidoCompra,
                                                   descricaoSolicitacao,
                                                   statusSolicitacao,

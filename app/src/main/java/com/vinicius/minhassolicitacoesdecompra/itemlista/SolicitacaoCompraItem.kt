@@ -10,6 +10,8 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -17,6 +19,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ShapeDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -35,17 +38,13 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.vinicius.minhassolicitacoesdecompra.AppDataBase
 import com.vinicius.minhassolicitacoesdecompra.R
-import com.vinicius.minhassolicitacoesdecompra.dao.SolicitacaoDao
 import com.vinicius.minhassolicitacoesdecompra.model.SolicitacaoDeCompra
 import com.vinicius.minhassolicitacoesdecompra.ui.theme.BlueCircle
 import com.vinicius.minhassolicitacoesdecompra.ui.theme.GreenCircle
 import com.vinicius.minhassolicitacoesdecompra.ui.theme.GreyCardBox
-import com.vinicius.minhassolicitacoesdecompra.ui.theme.GreyDefalt
-import com.vinicius.minhassolicitacoesdecompra.ui.theme.GreyDisableButton
 import com.vinicius.minhassolicitacoesdecompra.ui.theme.GreyTextBox
 import com.vinicius.minhassolicitacoesdecompra.ui.theme.Purple80
 import com.vinicius.minhassolicitacoesdecompra.ui.theme.RedCircle
-import com.vinicius.minhassolicitacoesdecompra.ui.theme.YellowBasic
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.time.format.DateTimeFormatter
@@ -124,51 +123,55 @@ fun SolicitacaoCompraItem(
                     }
                 )
 
-
-                Text(
-                    text = "SC $numeroSolicitacao".take(7),
-                    color = Color.White,
-                    fontSize = 22.sp,
-                    fontWeight = FontWeight.ExtraBold,
-                    modifier = Modifier
-                        .padding(top = 5.dp, start = 10.dp)
+                Row(modifier = Modifier.weight(1f).padding(start = 6.dp), verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = "SC $numeroSolicitacao",
+                        color = Color.White,
+                        fontSize = 22.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        modifier = Modifier
+                            .padding(top = 5.dp, start = 10.dp)
                     )
-                Text(
-                    text = "PC $numeroPedido".take(9),
-                    color = GreyTextBox,
-                    fontSize = 22.sp,
-                    fontWeight = FontWeight.ExtraBold,
-                    modifier = Modifier
-                        .padding(top = 5.dp, start = 15.dp)
-                )
+                    Spacer(modifier = Modifier.padding(horizontal = 6.dp))
+                    Text(
+                        text = "PC $numeroPedido".take(9),
+                        color = GreyTextBox,
+                        fontSize = 22.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        modifier = Modifier
+                            .padding(top = 5.dp, start = 15.dp)
+                    )
+                }
                 Text(
                     text = dataCriacao.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
                     color = Color.White,
                     fontSize = 12.sp,
                     fontWeight = FontWeight.SemiBold,
                     modifier = Modifier
-                        .padding(top = 2.dp, start = 40.dp, end = 5.dp)
+                        .padding(top = 2.dp, start = 10.dp, end = 5.dp)
                 )
             }
             Row(modifier = Modifier
-                .fillMaxWidth(1f),
-            verticalAlignment = Alignment.Top) {
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     text = descricaoSolicitacao,
                     color = Color.White,
                     textAlign = TextAlign.Start,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Normal,
-                    maxLines = 2,
+                    maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
+                    style = MaterialTheme.typography.labelSmall,
                     modifier = Modifier
-                        .padding(top = 10.dp, start = 20.dp, bottom = 5.dp, end = 5.dp)
-                        .fillMaxWidth(0.80f)
+                        .weight(1f)
+                        .fillMaxSize()
+                        .padding(start = 10.dp)
                 )
                 IconButton(onClick = {
                     alertDialogDeleteSolicitacao()
                 },
-                    modifier = Modifier.padding(start = 8.dp)
+                    modifier = Modifier.padding(start = 8.dp, end = 8.dp)
                 ){
                     Image(
                         imageVector = ImageVector.vectorResource(id = R.drawable.ic_delete),

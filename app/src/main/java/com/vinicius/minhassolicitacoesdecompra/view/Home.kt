@@ -115,7 +115,9 @@ fun Home(navController: NavController){
     }
 
     Scaffold (
-        modifier = Modifier.fillMaxSize().fillMaxHeight(),
+        modifier = Modifier
+            .fillMaxSize()
+            .fillMaxHeight(),
         containerColor = DarkBackground,
         floatingActionButton = {
             FloatingActionButton(
@@ -164,7 +166,8 @@ fun Home(navController: NavController){
                             .size(60.dp)
                             .background(
                                 color = RedCircle,
-                                shape = RoundedCornerShape(50)),
+                                shape = RoundedCornerShape(50)
+                            ),
                         contentAlignment = Alignment.Center){
                             val countText = listaSolicitacoes.count { it.statusSolicitacao == "SC em andamento" }
                             Text(
@@ -198,7 +201,8 @@ fun Home(navController: NavController){
                             .size(60.dp)
                             .background(
                                 color = BlueCircle,
-                                shape = RoundedCornerShape(50)),
+                                shape = RoundedCornerShape(50)
+                            ),
                             contentAlignment = Alignment.Center){
                             val countText = listaSolicitacoes.count { it.statusSolicitacao == "PC em aprovação" }
                             Text(
@@ -231,7 +235,8 @@ fun Home(navController: NavController){
                             .size(60.dp)
                             .background(
                                 color = GreenCircle,
-                                shape = RoundedCornerShape(50)),
+                                shape = RoundedCornerShape(50)
+                            ),
                             contentAlignment = Alignment.Center){
                             val countText = listaSolicitacoes.count { it.statusSolicitacao == "Aguardando entrega" }
                             Text(
@@ -288,7 +293,10 @@ fun Home(navController: NavController){
                     }
                 }
             )
-            LazyColumn(modifier = Modifier.fillMaxWidth().fillMaxSize()) {
+            LazyColumn(modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxSize()
+                .padding(top = 12.dp, bottom = 12.dp)) {
                 itemsIndexed(listaFiltrada) { position, item ->
                     SolicitacaoCompraItem(navController, position, listaFiltrada, context)
                 }
