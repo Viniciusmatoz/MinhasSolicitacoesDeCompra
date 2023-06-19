@@ -4,6 +4,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.ShapeDefaults
@@ -17,10 +18,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
 import com.maxkeppeler.sheets.calendar.CalendarDialog
 import com.maxkeppeler.sheets.calendar.models.CalendarSelection
+import com.vinicius.minhassolicitacoesdecompra.ui.theme.YellowBasic
+import com.vinicius.minhassolicitacoesdecompra.ui.theme.YellowDefault
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -43,7 +47,7 @@ fun CalendarioPopUp(
     Column {
         OutlinedButton(
             onClick = { calendarState.show() },
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().height(75.dp),
             shape = ShapeDefaults.Medium
         ) {
             Text(
@@ -51,7 +55,8 @@ fun CalendarioPopUp(
                 fontWeight = FontWeight.Bold,
                 fontSize = 16.sp,
                 textAlign = TextAlign.Left,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                color = YellowBasic
             )
         }
         CalendarDialog(

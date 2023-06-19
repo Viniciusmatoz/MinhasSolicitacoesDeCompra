@@ -24,6 +24,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -53,9 +54,13 @@ import com.vinicius.minhassolicitacoesdecompra.dao.SolicitacaoDao
 import com.vinicius.minhassolicitacoesdecompra.exposedDropDownMenu.CalendarioPopUp
 import com.vinicius.minhassolicitacoesdecompra.model.SolicitacaoDeCompra
 import com.vinicius.minhassolicitacoesdecompra.ui.theme.DarkBackground
+import com.vinicius.minhassolicitacoesdecompra.ui.theme.GreyBox
 import com.vinicius.minhassolicitacoesdecompra.ui.theme.GreyCardBox
 import com.vinicius.minhassolicitacoesdecompra.ui.theme.GreyDefalt
+import com.vinicius.minhassolicitacoesdecompra.ui.theme.GreyTextBox
 import com.vinicius.minhassolicitacoesdecompra.ui.theme.RedCircle
+import com.vinicius.minhassolicitacoesdecompra.ui.theme.YellowBasic
+import com.vinicius.minhassolicitacoesdecompra.ui.theme.YellowDefault
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -250,6 +255,12 @@ fun AdicionarSolicitacao (navController: NavController){
                     } else {
                         Color.White
                     },
+                    cursorColor = YellowDefault,
+                    focusedBorderColor = YellowDefault,
+                    unfocusedBorderColor = GreyBox,
+                    disabledTextColor = GreyTextBox,
+                    focusedLabelColor = YellowBasic,
+                    unfocusedLabelColor = GreyTextBox
                 ),
                 modifier = Modifier
                     .fillMaxWidth()

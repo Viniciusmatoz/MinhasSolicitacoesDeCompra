@@ -29,7 +29,6 @@ fun OutlinedButtonCustom(
         modifier = modifier,
         shape = ShapeDefaults.Medium,
         onClick = {
-
         }
     ){
         Text(text = txtContentButton,

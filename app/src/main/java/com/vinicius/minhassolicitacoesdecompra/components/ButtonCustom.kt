@@ -1,13 +1,16 @@
 package com.vinicius.minhassolicitacoesdecompra.components
 
+import android.graphics.fonts.FontStyle
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.vinicius.minhassolicitacoesdecompra.ui.theme.DarkBackground
@@ -39,7 +42,9 @@ fun ButtonCustom(
         Text(
             text = textButton,
             color = colorTextButton,
-            fontSize = 21.sp
+            style = MaterialTheme.typography.labelMedium,
+            maxLines = Int.MAX_VALUE,
+            fontSize = 16.sp
         )
     }
 }

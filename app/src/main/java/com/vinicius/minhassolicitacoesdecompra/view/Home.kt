@@ -121,7 +121,7 @@ fun Home(navController: NavController){
             FloatingActionButton(
                 onClick = { navController.navigate("adicionarSolicitacao") },
                 shape = ShapeDefaults.ExtraLarge,
-                containerColor = YellowBasic,
+                containerColor = YellowDefault,
                 elevation = FloatingActionButtonDefaults.elevation(10.dp),
                 modifier = Modifier.padding(bottom = 5.dp)
             ) {

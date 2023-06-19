@@ -56,9 +56,11 @@ import com.vinicius.minhassolicitacoesdecompra.components.OutlinedTextFieldCusto
 import com.vinicius.minhassolicitacoesdecompra.exposedDropDownMenu.CalendarioPopUp
 import com.vinicius.minhassolicitacoesdecompra.model.SolicitacaoDeCompra
 import com.vinicius.minhassolicitacoesdecompra.ui.theme.DarkBackground
+import com.vinicius.minhassolicitacoesdecompra.ui.theme.GreyBox
 import com.vinicius.minhassolicitacoesdecompra.ui.theme.GreyCardBox
 import com.vinicius.minhassolicitacoesdecompra.ui.theme.GreyDefalt
 import com.vinicius.minhassolicitacoesdecompra.ui.theme.GreyTextBox
+import com.vinicius.minhassolicitacoesdecompra.ui.theme.YellowDefault
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -191,7 +193,6 @@ fun EditarSolicitacaoCompra(navController: NavController, numeroSolicitacao: Str
                         .weight(1f)
                         .padding(horizontal = 4.dp)) {
                         ButtonCustom(
-                            modifier = Modifier.fillMaxWidth(),
                             enabled = buttonEnabled,
                             textButton = "Salvar alterações",
                             onClick = {
@@ -296,7 +297,14 @@ fun EditarSolicitacaoCompra(navController: NavController, numeroSolicitacao: Str
                             .padding(top = 10.dp)
                             .fillMaxWidth(),
                         readOnly = true,
-                        colors = TextFieldDefaults.outlinedTextFieldColors(textColor = GreyTextBox, disabledLabelColor = GreyTextBox)
+                        colors = TextFieldDefaults.outlinedTextFieldColors(
+                            textColor = GreyTextBox,
+                            disabledLabelColor = GreyTextBox,
+                            focusedLabelColor = YellowDefault,
+                            disabledTextColor = GreyTextBox,
+                            unfocusedLabelColor = GreyTextBox,
+                            focusedBorderColor = YellowDefault,
+                        )
                     )
 
                     OutlinedTextFieldCustom(

@@ -8,8 +8,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.ShapeDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -21,6 +23,8 @@ import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
 import com.maxkeppeler.sheets.list.ListDialog
 import com.maxkeppeler.sheets.list.models.ListOption
 import com.maxkeppeler.sheets.list.models.ListSelection
+import com.vinicius.minhassolicitacoesdecompra.ui.theme.DarkBackground
+import com.vinicius.minhassolicitacoesdecompra.ui.theme.YellowBasic
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -37,6 +41,13 @@ fun OutlinedButtonPopUpCustom(
         OutlinedButton(
             modifier = modifier,
             onClick = { showPopup.value = true },
+            shape = ShapeDefaults.Medium,
+            colors = ButtonDefaults.buttonColors(
+                containerColor = DarkBackground,
+                contentColor = YellowBasic,
+                disabledContainerColor = DarkBackground,
+                disabledContentColor = YellowBasic
+            )
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),

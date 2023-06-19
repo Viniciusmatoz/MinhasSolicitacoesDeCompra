@@ -29,7 +29,7 @@ fun OutlinedTextFieldCustom(
         focusedBorderColor = YellowDefault,
         unfocusedBorderColor = GreyBox,
         textColor = Color.White,
-        disabledTextColor = Color.White,
+        disabledTextColor = GreyTextBox,
         focusedLabelColor = YellowBasic,
         unfocusedLabelColor = GreyTextBox
     ),
