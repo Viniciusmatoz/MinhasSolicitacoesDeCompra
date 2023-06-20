@@ -132,7 +132,6 @@ fun SolicitacaoCompraItem(
                         modifier = Modifier
                             .padding(top = 5.dp, start = 10.dp)
                     )
-                    Spacer(modifier = Modifier.padding(horizontal = 6.dp))
                     Text(
                         text = "PC $numeroPedido".take(9),
                         color = GreyTextBox,
@@ -140,6 +139,7 @@ fun SolicitacaoCompraItem(
                         fontWeight = FontWeight.ExtraBold,
                         modifier = Modifier
                             .padding(top = 5.dp, start = 15.dp)
+                            .weight(1f)
                     )
                 }
                 Text(
@@ -148,7 +148,7 @@ fun SolicitacaoCompraItem(
                     fontSize = 12.sp,
                     fontWeight = FontWeight.SemiBold,
                     modifier = Modifier
-                        .padding(top = 2.dp, start = 10.dp, end = 5.dp)
+                        .padding(top = 2.dp, end = 5.dp)
                 )
             }
             Row(modifier = Modifier
